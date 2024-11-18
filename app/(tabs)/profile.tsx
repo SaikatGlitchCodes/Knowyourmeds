@@ -116,7 +116,7 @@ const Profile: React.FC = () => {
                     <Text className='text-xl text-muted-foreground ms-5'>{item.value}</Text>
                 )}
             </View>
-            {index < generalInfoItems.length - 1 && <Separator className='my-2' />}
+            {index < generalInfoItems.length - 1 && <Separator className='my-1' />}
         </React.Fragment>
     );
 
@@ -149,11 +149,11 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <SafeAreaView className={`flex-1`}>
-            <ScrollView className='py-10 mb-20'>
+        <SafeAreaView className='flex-1'>
+            <ScrollView className='py-10 mb-20 p-9'>
                 <TouchableOpacity
                     onPress={() => setIsEditing(!isEditing)}
-                    className='absolute top-0 flex-row items-center p-2 border-[1px] right-7 rounded-lg border-slate-300'
+                    className='absolute top-0 flex-row items-center p-2 border-[1px] right-0 rounded-lg border-slate-300'
                 >
                     <Feather name="edit" size={15} color={textColor} />
                     <Text className='ml-2 text-foreground'>{isEditing ? 'Save' : 'Edit'}</Text>
@@ -173,18 +173,18 @@ const Profile: React.FC = () => {
                     Joined on : 31st Jan 2024
                 </Text>
 
-                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300 mx-7'>
+                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
                     <Text className='mb-4 text-2xl font-normal text-foreground'>General</Text>
                     {generalInfoItems.map((item, index) => renderGeneralInfoItem(item, index))}
                 </View>
 
-                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300 mx-7'>
+                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
                     <Text className='mb-4 text-2xl font-normal text-foreground'>Notifications</Text>
                     {notificationItems.map((item, index) => renderNotificationItem(item, index))}
                 </View>
 
                 <TouchableOpacity
-                    className='p-4 my-5 border border-red-500 rounded-lg mx-9'
+                    className='p-4 my-5 border border-red-500 rounded-lg'
                     onPress={handleSignOut}
                 >
                     <Text className='font-bold text-center text-red-500'>Sign Out</Text>
@@ -193,7 +193,7 @@ const Profile: React.FC = () => {
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
                         <TouchableOpacity
-                            className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg mx-9'
+                            className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg '
                         >
                             <AntDesign name="delete" size={18} color="white" />
                             <Text className='ml-2 font-bold text-white'>Delete Account</Text>
@@ -209,7 +209,9 @@ const Profile: React.FC = () => {
                         <TextInput value={profileNamecheck} onChangeText={val=>setProfileNamecheck(val)} placeholder={profileData.name} className='border-[1px] rounded-sm p-2 border-gray-400 text-foreground' />
                         <DialogFooter className='flex-row justify-end'>
                             <Button variant="outline"><Text className='text-foreground' onPress={()=>{setIsOpen(false); console.log("closing")}}>Cancel</Text></Button>
-                            <Button disabled={profileData.name!==profileNamecheck} variant="destructive"><Text className='text-white' onPress={()=>{setIsOpen(false)}}>Delete!</Text></Button>
+                            <Button disabled={profileData.name!==profileNamecheck} variant="destructive" onPress={()=>{setIsOpen(false)}}>
+                                <Text className='text-white' >Delete!</Text>
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

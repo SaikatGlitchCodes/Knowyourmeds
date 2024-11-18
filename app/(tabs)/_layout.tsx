@@ -21,9 +21,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          headerRight: () => <ThemeToggle />,
+          headerShown: false,
           title: 'Home',
-          tabBarIcon: ({ color }) => <FontAwesome name="user-circle" size={29} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="home" size={29} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -31,7 +31,7 @@ export default function TabLayout() {
         options={{
           headerRight: () => <ThemeToggle />,
           title: 'Profile',
-          tabBarIcon: ({ color }) => <FontAwesome name="user-circle" size={29} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={29} color={color} />,
         }}
       />
     </Tabs>
