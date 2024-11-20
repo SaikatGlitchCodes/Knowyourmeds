@@ -1,0 +1,200 @@
+import React, { useState, useRef, useCallback, useMemo } from 'react';
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    ListRenderItem,
+    NativeSyntheticEvent, NativeScrollEvent
+} from 'react-native';
+import * as Haptics from 'expo-haptics';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+interface DateItem {
+    date: string;
+    day: string;
+    isToday: boolean;
+    id: string;
+}
+
+const ITEM_WIDTH = 60;
+const ITEMS_PER_PAGE = 15;
+const THRESHOLD = 5;
+
+function generateDatesAround(centerDate: Date, daysBack: number, daysForward: number): { dates: DateItem[]; todayIndex: number } {
+    const result: DateItem[] = [];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date().toISOString().split('T')[0];
+    const date = new Date(centerDate);
+    let todayIndex = -1;
+
+    for (let i = daysBack; i > 0; i--) {
+        const prevDate = new Date(date);
+        prevDate.setDate(date.getDate() - i);
+        const dateStr = prevDate.toISOString().split('T')[0];
+        result.push({
+            date: dateStr,
+            day: days[prevDate.getDay()],
+            isToday: dateStr === today,
+            id: dateStr,
+        });
+    }
+
+    const centerDateStr = date.toISOString().split('T')[0];
+    result.push({
+        date: centerDateStr,
+        day: days[date.getDay()],
+        isToday: centerDateStr === today,
+        id: centerDateStr,
+    });
+
+    if (centerDateStr === today) {
+        todayIndex = result.length - 1;
+    }
+
+    for (let i = 1; i <= daysForward; i++) {
+        const nextDate = new Date(date);
+        nextDate.setDate(date.getDate() + i);
+        const dateStr = nextDate.toISOString().split('T')[0];
+        result.push({
+            date: dateStr,
+            day: days[nextDate.getDay()],
+            isToday: dateStr === today,
+            id: dateStr,
+        });
+
+        if (dateStr === today) {
+            todayIndex = result.length - 1;
+        }
+    }
+
+    return { dates: result, todayIndex };
+}
+
+const HorizontalCalendar: React.FC = () => {
+    const { dates: initialDates, todayIndex } = generateDatesAround(new Date(), ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+
+    const [dates, setDates] = useState<DateItem[]>(initialDates);
+    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [currentMonth, setCurrentMonth] = useState<string>(
+        new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
+    );
+
+    const flatListRef = useRef<FlatList>(null);
+    const lastTriggeredIndex = useRef<number | null>(null);
+
+    const handleScroll = useCallback(
+        (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+            const offsetX = event.nativeEvent.contentOffset.x;
+            const index = Math.round(offsetX / ITEM_WIDTH);
+    
+            // Trigger haptics only if a new index is reached
+            if (index !== lastTriggeredIndex.current && index >= 0 && index < dates.length) {
+                lastTriggeredIndex.current = index;
+                Haptics.selectionAsync(); // Provide feedback as the user scrolls
+            }
+        },
+        [dates]
+    );
+
+    const handleResetToToday = () => {
+        const todayIndex = dates.findIndex((item) => item.isToday);
+        if (todayIndex !== -1) {
+            flatListRef.current?.scrollToIndex({
+                index: todayIndex + 2,
+                animated: true,
+            });
+            setSelectedDate(dates[todayIndex].date);
+            Haptics.selectionAsync(); // Feedback on reset
+        }
+    };
+
+    const renderDateItem: ListRenderItem<DateItem> = useCallback(
+        ({ item }) => {
+            const isSelected = item.date === selectedDate;
+
+            const handlePress = () => {
+                Haptics.selectionAsync(); // Feedback on date selection
+                setSelectedDate(item.date);
+            };
+
+            return (
+                <TouchableOpacity
+                    style={[
+                        styles.dateItem,
+                        item.isToday && styles.todayItem,
+                        isSelected && styles.selectedItem,
+                    ]}
+                    onPress={handlePress}
+                >
+                    <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
+                    <Text style={[styles.dateText, item.isToday && styles.todayText]}>{item.date.split('-')[2]}</Text>
+                </TouchableOpacity>
+            );
+        },
+        [selectedDate]
+    );
+
+    return (
+        <View className="my-8">
+            <View className="flex-row justify-between mb-3">
+                <Text className="text-2xl">{currentMonth}</Text>
+                <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color="black" />
+            </View>
+
+            <FlatList
+                ref={flatListRef}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={dates}
+                renderItem={renderDateItem}
+                keyExtractor={(item) => item.id}
+                initialScrollIndex={todayIndex + 2}
+                snapToInterval={ITEM_WIDTH}
+                decelerationRate="fast"
+                onScroll={handleScroll} // Haptics while scrolling
+                scrollEventThrottle={16} // Higher frequency for smooth feedback
+                getItemLayout={(_, index) => ({
+                    length: ITEM_WIDTH,
+                    offset: ITEM_WIDTH * index,
+                    index,
+                })}
+            />
+        </View>
+    );
+};
+
+
+const styles = {
+    dateItem: {
+        width: ITEM_WIDTH,
+        alignItems: 'center',
+        paddingVertical: 25,
+        marginHorizontal: 5, // Space between items
+        borderWidth: 1,
+        borderColor: '#e5e7eb', // Tailwind: border-gray-200
+        borderRadius: 20,
+        backgroundColor: '#ffffff', // Tailwind: bg-white
+    },
+    todayItem: {
+        backgroundColor: '#3b82f6', // Tailwind: bg-blue-500
+        borderColor: '#3b82f6',
+    },
+    selectedItem: {
+        borderColor: '#3b82f6',
+    },
+    dayText: {
+        fontSize: 12,
+        color: '#6b7280', // Tailwind: text-gray-500
+    },
+    dateText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#111827', // Tailwind: text-gray-900
+    },
+    todayText: {
+        color: '#ffffff', // Tailwind: text-white
+    },
+};
+
+export default HorizontalCalendar;

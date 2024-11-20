@@ -10,15 +10,15 @@ const Index = () => {
         <SafeAreaView className='flex-1'>
             <ScrollView className='p-8'>
                 <View className='flex-row items-center gap-x-3'>
-                    <Avatar className='w-14 h-14' alt="Zach Nugent's Avatar">
+                    <Avatar className='w-10 h-10' alt="Zach Nugent's Avatar">
                         <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
                         <AvatarFallback>
                             <Text>ZN</Text>
                         </AvatarFallback>
                     </Avatar>
-                    <Text className='text-3xl'>Hi, <Text className='font-semibold'>Saikat</Text> 👋</Text>
+                    <Text className='text-2xl'>Hi, <Text className='font-semibold'>Saikat</Text> 👋</Text>
                 </View>
-                <Text className='mt-6 text-4xl'>"Take your medicine today for a healthier tomorrow"</Text>
+                <Text className='mt-6 text-3xl'>"Take your medicine today for a healthier tomorrow"</Text>
                 <HorizontalCalendar />
             </ScrollView>
         </SafeAreaView>
