@@ -149,8 +149,9 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <SafeAreaView className='flex-1'>
-            <ScrollView className='py-10 mb-20 p-9'>
+        
+            <ScrollView className='py-10 mx-5'>
+            <SafeAreaView >
                 <TouchableOpacity
                     onPress={() => setIsEditing(!isEditing)}
                     className='absolute top-0 flex-row items-center p-2 border-[1px] right-0 rounded-lg border-slate-300'
@@ -215,8 +216,9 @@ const Profile: React.FC = () => {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            </ScrollView>
+            
         </SafeAreaView>
+        </ScrollView>
     );
 };
 

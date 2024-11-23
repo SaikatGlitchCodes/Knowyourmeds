@@ -5,16 +5,23 @@ import {
     FlatList,
     TouchableOpacity,
     ListRenderItem,
-    NativeSyntheticEvent, NativeScrollEvent
+    NativeSyntheticEvent, NativeScrollEvent,
+    useColorScheme
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { NAV_THEME } from '~/lib/constants';
 
 interface DateItem {
     date: string;
     day: string;
     isToday: boolean;
     id: string;
+}
+
+interface HorizontalCalendarProps {
+    selectedDate: string;
+    setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ITEM_WIDTH = 60;
@@ -71,43 +78,79 @@ function generateDatesAround(centerDate: Date, daysBack: number, daysForward: nu
     return { dates: result, todayIndex };
 }
 
-const HorizontalCalendar: React.FC = () => {
+const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, setSelectedDate}) => {
     const { dates: initialDates, todayIndex } = generateDatesAround(new Date(), ITEMS_PER_PAGE, ITEMS_PER_PAGE);
 
     const [dates, setDates] = useState<DateItem[]>(initialDates);
-    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [currentMonth, setCurrentMonth] = useState<string>(
         new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
     );
 
     const flatListRef = useRef<FlatList>(null);
     const lastTriggeredIndex = useRef<number | null>(null);
-
+    const scrollOffset = useRef<number>(0);
+    const colorScheme = useColorScheme();
+    const textColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
     const handleScroll = useCallback(
         (event: NativeSyntheticEvent<NativeScrollEvent>) => {
             const offsetX = event.nativeEvent.contentOffset.x;
+            scrollOffset.current = offsetX;
+
             const index = Math.round(offsetX / ITEM_WIDTH);
-    
-            // Trigger haptics only if a new index is reached
-            if (index !== lastTriggeredIndex.current && index >= 0 && index < dates.length) {
-                lastTriggeredIndex.current = index;
-                Haptics.selectionAsync(); // Provide feedback as the user scrolls
+
+            if (index >= 0 && index < dates.length) {
+                const currentDate = dates[index];
+                const currentMonthString = new Date(currentDate.date).toLocaleString('default', {
+                    month: 'long',
+                    year: 'numeric',
+                });
+
+                if (currentMonthString !== currentMonth) {
+                    setCurrentMonth(currentMonthString);
+                }
+
+                // Trigger haptics only if a new index is reached
+                if (index !== lastTriggeredIndex.current) {
+                    lastTriggeredIndex.current = index;
+                    Haptics.selectionAsync(); // Provide feedback as the user scrolls
+                }
             }
         },
-        [dates]
+        [dates, currentMonth]
     );
 
     const handleResetToToday = () => {
         const todayIndex = dates.findIndex((item) => item.isToday);
         if (todayIndex !== -1) {
             flatListRef.current?.scrollToIndex({
-                index: todayIndex + 2,
+                index: todayIndex + 3,
                 animated: true,
             });
-            setSelectedDate(dates[todayIndex].date);
             Haptics.selectionAsync(); // Feedback on reset
         }
+        setSelectedDate(dates[todayIndex].date);
     };
+
+    const loadMoreDates = useCallback(
+        (direction: 'back' | 'forward') => {
+            const centerDate = new Date(
+                direction === 'back' ? dates[0].date : dates[dates.length - 1].date
+            );
+            const additionalDates = generateDatesAround(centerDate, direction === 'back' ? ITEMS_PER_PAGE : 0, direction === 'forward' ? ITEMS_PER_PAGE : 0).dates;
+
+            setDates((prevDates) =>
+                direction === 'back' ? [...additionalDates, ...prevDates] : [...prevDates, ...additionalDates]
+            );
+
+            if (direction === 'back') {
+                flatListRef.current?.scrollToOffset({
+                    offset: scrollOffset.current + ITEMS_PER_PAGE * ITEM_WIDTH,
+                    animated: false,
+                });
+            }
+        },
+        [dates]
+    );
 
     const renderDateItem: ListRenderItem<DateItem> = useCallback(
         ({ item }) => {
@@ -125,10 +168,11 @@ const HorizontalCalendar: React.FC = () => {
                         item.isToday && styles.todayItem,
                         isSelected && styles.selectedItem,
                     ]}
+                    className={`items-center py-8 mx-2 ${textColor} border-[1.5px] rounded-full border-gray-500`}
                     onPress={handlePress}
                 >
                     <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
-                    <Text style={[styles.dateText, item.isToday && styles.todayText]}>{item.date.split('-')[2]}</Text>
+                    <Text className={`text-2xl ${item.isToday && 'text-white'} text-foreground`}>{item.date.split('-')[2]}</Text>
                 </TouchableOpacity>
             );
         },
@@ -138,8 +182,8 @@ const HorizontalCalendar: React.FC = () => {
     return (
         <View className="my-8">
             <View className="flex-row justify-between mb-3">
-                <Text className="text-2xl">{currentMonth}</Text>
-                <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color="black" />
+                <Text className="text-2xl text-foreground">{currentMonth}</Text>
+                <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color={textColor} />
             </View>
 
             <FlatList
@@ -149,11 +193,18 @@ const HorizontalCalendar: React.FC = () => {
                 data={dates}
                 renderItem={renderDateItem}
                 keyExtractor={(item) => item.id}
-                initialScrollIndex={todayIndex + 2}
+                initialScrollIndex={todayIndex+3}
                 snapToInterval={ITEM_WIDTH}
                 decelerationRate="fast"
                 onScroll={handleScroll} // Haptics while scrolling
                 scrollEventThrottle={16} // Higher frequency for smooth feedback
+                onEndReachedThreshold={0.5}
+                onEndReached={() => loadMoreDates('forward')} // Load more dates when scrolling forward
+                onMomentumScrollBegin={() => {
+                    if (scrollOffset.current <= ITEM_WIDTH * THRESHOLD) {
+                        loadMoreDates('back');
+                    }
+                }}
                 getItemLayout={(_, index) => ({
                     length: ITEM_WIDTH,
                     offset: ITEM_WIDTH * index,
@@ -164,17 +215,9 @@ const HorizontalCalendar: React.FC = () => {
     );
 };
 
-
 const styles = {
     dateItem: {
         width: ITEM_WIDTH,
-        alignItems: 'center',
-        paddingVertical: 25,
-        marginHorizontal: 5, // Space between items
-        borderWidth: 1,
-        borderColor: '#e5e7eb', // Tailwind: border-gray-200
-        borderRadius: 20,
-        backgroundColor: '#ffffff', // Tailwind: bg-white
     },
     todayItem: {
         backgroundColor: '#3b82f6', // Tailwind: bg-blue-500
