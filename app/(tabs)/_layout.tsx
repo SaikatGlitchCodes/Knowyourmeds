@@ -27,6 +27,14 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="camera"
+        options={{
+          headerShown: false,
+          title: 'Camera',
+          tabBarIcon: ({ color }) => <FontAwesome name="plus" size={29} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           headerRight: () => <ThemeToggle />,
