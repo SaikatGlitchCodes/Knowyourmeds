@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { FlatList, StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView, ScrollView } from 'react-native';
 import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
 import SwipeableCard from '~/components/custom/SliderInfo';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 
 const Index = () => {
@@ -48,9 +49,15 @@ const Index = () => {
                 </View>
                 <Text className='mt-6 text-3xl text-card-foreground'>"Take your medicine today for a healthier tomorrow"</Text>
                 <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-                <GestureHandlerRootView className='flex-1'>
-                   <SwipeableCard/>
-                </GestureHandlerRootView>
+                <View className='gap-y-24'>
+                    <GestureHandlerRootView >
+                        <SwipeableCard />
+                    </GestureHandlerRootView>
+                    <GestureHandlerRootView>             <SwipeableCard />
+                    </GestureHandlerRootView>
+                    <GestureHandlerRootView>             <SwipeableCard />
+                    </GestureHandlerRootView>
+                </View>
             </View>
         </SafeAreaView>
     );
