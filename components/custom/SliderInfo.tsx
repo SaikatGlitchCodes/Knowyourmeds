@@ -62,10 +62,10 @@ const SwipeableCard = () => {
                 ]}
             >
                 <View className='flex-row items-center p-2 border-[1px] border-gray-400 gap-x-6 rounded-3xl px-5 h-20'>
-                    <Image className='h-14 w-14' source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOt0A23mzyuU8Z_N2qcOSKwvhfU1CZy8X8w&s' }} />
+                    <Image className='h-14 w-14' source={{ uri: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png' }} />
                     <View className=''>
                         <Text className='text-muted-foreground'>1 pill, once per day</Text>
-                        <Text className='text-xl'>Loratadine. 10mg</Text>
+                        <Text className='text-xl- text-foreground'>Loratadine 10mg</Text>
                         <Text className='text-muted-foreground'> 16:00 pm </Text>
                     </View>
                 </View>
