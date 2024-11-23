@@ -150,7 +150,7 @@ const Profile: React.FC = () => {
 
     return (
         
-            <ScrollView className='py-10 mx-5'>
+            <ScrollView className='px-5'>
             <SafeAreaView >
                 <TouchableOpacity
                     onPress={() => setIsEditing(!isEditing)}
@@ -194,7 +194,7 @@ const Profile: React.FC = () => {
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                     <DialogTrigger asChild>
                         <TouchableOpacity
-                            className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg '
+                            className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg mb-20'
                         >
                             <AntDesign name="delete" size={18} color="white" />
                             <Text className='ml-2 font-bold text-white'>Delete Account</Text>
