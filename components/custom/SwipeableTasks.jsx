@@ -13,13 +13,14 @@ import SwipeableItem, {
   OpenDirection,
 } from 'react-native-swipeable-item';
 import DraggableFlatList, {
-  RenderItemParams,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist';
 
+} from 'react-native-draggable-flatlist';
+import { NAV_THEME } from '~/lib/constants';
+import { colorScheme } from 'nativewind';
+import Feather from '@expo/vector-icons/Feather';
 const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
-
+const themecontrol = NAV_THEME[colorScheme === "light" ? "light" : "dark"]
 
 function SimpleSwipable(props) {
 
@@ -47,6 +48,7 @@ function SimpleSwipable(props) {
         renderItem={renderItem}
         onDragEnd={({ data }) => setData(data)}
         activationDistance={20}
+
       />
     </View>
   );
@@ -57,40 +59,47 @@ export default SimpleSwipable;
 function RowItem({ item, itemRefs, drag, onPressDelete }) {
 
   return (
-    <SwipeableItem
-      key={item.key}
-      item={item}
-      ref={(ref) => {
-        if (ref && !itemRefs.current.get(item.key)) {
-          itemRefs.current.set(item.key, ref);
-        }
-      }}
-      onChange={({ openDirection }) => {
-        if (openDirection !== OpenDirection.NONE) {
-          [...itemRefs.current.entries()].forEach(([key, ref]) => {
-            if (key !== item.key && ref) ref.close();
-          });
-        }
-      }}
-      overSwipe={OVERSWIPE_DIST}
-      renderUnderlayLeft={() => (
-        <UnderlayLeft drag={drag} onPressDelete={onPressDelete} />
-      )}
-      renderUnderlayRight={() => <UnderlayRight />}
-      snapPointsLeft={[150]}
-      snapPointsRight={[150]}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onLongPress={drag}
-        className='h-24 mx-5 my-3 border-2 rounded-full bg-slate-500'>
-        <View className='flex-row items-center bg-red-200'>
-          <Image source={{ uri: item.image }} className='w-10 h-10' />
-          <View>
-            <Text className='text-2xl text-foreground'> {item.name} </Text>
+    <View style={styles.itemBreak}>
+      <SwipeableItem
+        key={item.key}
+        item={item}
+        ref={(ref) => {
+          if (ref && !itemRefs.current.get(item.key)) {
+            itemRefs.current.set(item.key, ref);
+          }
+        }}
+        onChange={({ openDirection }) => {
+          if (openDirection !== OpenDirection.NONE) {
+            [...itemRefs.current.entries()].forEach(([key, ref]) => {
+              if (key !== item.key && ref) ref.close();
+            });
+          }
+        }}
+        overSwipe={OVERSWIPE_DIST}
+        renderUnderlayLeft={() => (
+          <UnderlayLeft drag={drag} onPressDelete={onPressDelete} />
+        )}
+        renderUnderlayRight={() => <UnderlayRight />}
+        snapPointsLeft={[150]}
+        snapPointsRight={[150]}>
+
+        <TouchableOpacity
+
+          activeOpacity={1}
+          onLongPress={drag}
+          style={styles.sliders}
+          className='border-2 rounded-full'>
+
+          <View className='flex-row items-center h-full px-5'>
+            <Image source={{ uri: item.image }} style={{ height: 20, width: 20, marginRight: 20 }} />
+            <View>
+              <Text className='text-2xl text-foreground'> {item.name} </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    </SwipeableItem>
+
+        </TouchableOpacity>
+      </SwipeableItem>
+    </View>
   );
 }
 
@@ -110,8 +119,8 @@ const UnderlayLeft = ({
     <Animated.View
       style={[styles.row, styles.underlayLeft, animStyle]} // Fade in on open
     >
-      <TouchableOpacity onPress={onPressDelete}>
-        <Text style={styles.text}>{`[delete]`}</Text>
+      <TouchableOpacity onPress={onPressDelete} >
+        <Feather name="trash-2" size={24} color={themecontrol.text} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -131,13 +140,16 @@ function UnderlayRight() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
   },
   row: {
+
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15,
+   
+    
   },
   text: {
     fontWeight: 'bold',
@@ -151,7 +163,22 @@ const styles = StyleSheet.create({
   },
   underlayLeft: {
     flex: 1,
+    padding: 12,
     backgroundColor: 'tomato',
     justifyContent: 'flex-end',
+    borderRadius: 30,
+    
   },
+  sliders: {
+    marginHorizontal: 7,
+    height: 60,
+    flex: 'row',
+    alignItems: 'left',
+    backgroundColor: themecontrol.background,
+    borderColor: themecontrol.border
+  },
+  itemBreak:{
+    marginBottom:10
+  }
+
 });
