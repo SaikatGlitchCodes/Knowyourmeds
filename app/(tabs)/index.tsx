@@ -34,7 +34,7 @@ const Index = () => {
     console.log('Selected date', selectedDate);
 
     return (
-        <SafeAreaView className='px-4' style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
+        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{ flex: 1 }}
@@ -54,7 +54,7 @@ const Index = () => {
                     "Take your medicine today for a healthier tomorrow"
                 </Text>
                 <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-                <SimpleSwipable />
+                <SimpleSwipable tasks={tasks}/>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
