@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, View, Text } from 'react-native';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
-import SwipeableCard from '~/components/custom/SliderInfo';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import SimpleSwipable from '~/components/custom/SwipeableTasks';
 
 
 const Index = () => {
@@ -35,34 +33,32 @@ const Index = () => {
     ]);
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
     console.log('Selected date', selectedDate);
+
     return (
-        <SafeAreaView className='flex-1 '>
-            <View className='p-4'>
-                <View className='flex-row items-center gap-x-3'>
-                    <Avatar className='w-10 h-10' alt="Zach Nugent's Avatar">
+        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={{ flex: 1 }}
+            >
+                <View className='flex-row items-center px-2'>
+                    <Avatar className='w-16 h-16' alt="Saikat's Avatar">
                         <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
                         <AvatarFallback>
                             <Text>ZN</Text>
                         </AvatarFallback>
                     </Avatar>
-                    <Text className='text-2xl text-foreground'>Hi, <Text className='font-semibold '>Saikat</Text> 👋</Text>
+                    <Text className='text-3xl ms-5 text-foreground'>
+                        Hi, <Text className='font-semibold '>Saikat</Text> 👋
+                    </Text>
                 </View>
-                <Text className='mt-6 text-3xl text-card-foreground'>"Take your medicine today for a healthier tomorrow"</Text>
+                <Text className='px-4 mt-4 text-4xl text-foreground'>
+                    "Take your medicine today for a healthier tomorrow"
+                </Text>
                 <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-                <View className='gap-y-24'>
-                    <GestureHandlerRootView >
-                        <SwipeableCard />
-                    </GestureHandlerRootView>
-                    <GestureHandlerRootView>             <SwipeableCard />
-                    </GestureHandlerRootView>
-                    <GestureHandlerRootView>             <SwipeableCard />
-                    </GestureHandlerRootView>
-                </View>
-            </View>
+                <SimpleSwipable tasks={tasks}/>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
-}
-
-const styles = StyleSheet.create({})
+};
 
 export default Index;

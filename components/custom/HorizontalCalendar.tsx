@@ -25,7 +25,7 @@ interface HorizontalCalendarProps {
 }
 
 const ITEM_WIDTH = 60;
-const ITEMS_PER_PAGE = 15;
+const ITEMS_PER_PAGE = 5;
 const THRESHOLD = 5;
 
 function generateDatesAround(centerDate: Date, daysBack: number, daysForward: number): { dates: DateItem[]; todayIndex: number } {
@@ -123,7 +123,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
         const todayIndex = dates.findIndex((item) => item.isToday);
         if (todayIndex !== -1) {
             flatListRef.current?.scrollToIndex({
-                index: todayIndex + 3,
+                index: todayIndex,
                 animated: true,
             });
             Haptics.selectionAsync(); // Feedback on reset
@@ -168,7 +168,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
                         item.isToday && styles.todayItem,
                         isSelected && styles.selectedItem,
                     ]}
-                    className={`items-center py-8 mx-2 ${textColor} border-[1.5px] rounded-full border-gray-500`}
+                    className={`items-center py-8 mx-2 ${textColor} border-[1.5px] rounded-full border-gray-500 px-4`}
                     onPress={handlePress}
                 >
                     <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
@@ -180,7 +180,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
     );
 
     return (
-        <View className="my-8">
+        <View className="mx-2 my-8">
             <View className="flex-row justify-between mb-3">
                 <Text className="text-2xl text-foreground">{currentMonth}</Text>
                 <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color={textColor} />
@@ -193,7 +193,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
                 data={dates}
                 renderItem={renderDateItem}
                 keyExtractor={(item) => item.id}
-                initialScrollIndex={todayIndex+3}
+                initialScrollIndex={todayIndex+ITEMS_PER_PAGE*2}
                 snapToInterval={ITEM_WIDTH}
                 decelerationRate="fast"
                 onScroll={handleScroll} // Haptics while scrolling

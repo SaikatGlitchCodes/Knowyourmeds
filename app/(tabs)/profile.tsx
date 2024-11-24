@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Modal, TouchableHighlight } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Modal, TouchableHighlight, KeyboardAvoidingView, Platform } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Feather, Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import { Separator } from '~/components/ui/separator';
@@ -149,76 +149,79 @@ const Profile: React.FC = () => {
     };
 
     return (
-        
-            <ScrollView className='px-5'>
-            <SafeAreaView >
-                <TouchableOpacity
-                    onPress={() => setIsEditing(!isEditing)}
-                    className='absolute top-0 flex-row items-center p-2 border-[1px] right-0 rounded-lg border-slate-300'
-                >
-                    <Feather name="edit" size={15} color={textColor} />
-                    <Text className='ml-2 text-foreground'>{isEditing ? 'Save' : 'Edit'}</Text>
-                </TouchableOpacity>
+        <SafeAreaView className='flex-1' >
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={{ flex: 1 }}
+            >
+                <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 50 }}>
+                    <TouchableOpacity
+                        onPress={() => setIsEditing(!isEditing)}
+                        className='absolute top-5 flex-row items-center p-2 border-[1px] right-5 rounded-lg border-slate-300'
+                    >
+                        <Feather name="edit" size={15} color={textColor} />
+                        <Text className='ml-2 text-foreground'>{isEditing ? 'Save' : 'Edit'}</Text>
+                    </TouchableOpacity>
 
-                <Avatar className='w-40 h-40 mx-auto' alt=''>
-                    <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
-                    <AvatarFallback>
-                        <Text className='text-3xl'>ZN</Text>
-                    </AvatarFallback>
-                </Avatar>
+                    <Avatar className='w-40 h-40 mx-auto' alt=''>
+                        <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
+                        <AvatarFallback>
+                            <Text className='text-3xl'>ZN</Text>
+                        </AvatarFallback>
+                    </Avatar>
 
-                <Text className='mt-5 text-4xl font-bold text-center text-foreground'>
-                    {profileData.name}
-                </Text>
-                <Text className='text-center text-gray-600 text-md'>
-                    Joined on : 31st Jan 2024
-                </Text>
+                    <Text className='mt-5 text-4xl font-bold text-center text-foreground'>
+                        {profileData.name}
+                    </Text>
+                    <Text className='text-center text-gray-600 text-md'>
+                        Joined on : 31st Jan 2024
+                    </Text>
 
-                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
-                    <Text className='mb-4 text-2xl font-normal text-foreground'>General</Text>
-                    {generalInfoItems.map((item, index) => renderGeneralInfoItem(item, index))}
-                </View>
+                    <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
+                        <Text className='mb-4 text-2xl font-normal text-foreground'>General</Text>
+                        {generalInfoItems.map((item, index) => renderGeneralInfoItem(item, index))}
+                    </View>
 
-                <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
-                    <Text className='mb-4 text-2xl font-normal text-foreground'>Notifications</Text>
-                    {notificationItems.map((item, index) => renderNotificationItem(item, index))}
-                </View>
+                    <View className='p-4 border-[1px] mt-9 rounded-2xl border-neutral-300'>
+                        <Text className='mb-4 text-2xl font-normal text-foreground'>Notifications</Text>
+                        {notificationItems.map((item, index) => renderNotificationItem(item, index))}
+                    </View>
 
-                <TouchableOpacity
-                    className='p-4 my-5 border border-red-500 rounded-lg'
-                    onPress={handleSignOut}
-                >
-                    <Text className='font-bold text-center text-red-500'>Sign Out</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        className='p-4 my-5 border border-red-500 rounded-lg'
+                        onPress={handleSignOut}
+                    >
+                        <Text className='font-bold text-center text-red-500'>Sign Out</Text>
+                    </TouchableOpacity>
 
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                    <DialogTrigger asChild>
-                        <TouchableOpacity
-                            className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg mb-20'
-                        >
-                            <AntDesign name="delete" size={18} color="white" />
-                            <Text className='ml-2 font-bold text-white'>Delete Account</Text>
-                        </TouchableOpacity>
-                    </DialogTrigger>
-                    <DialogContent className='sm:max-w-[425px]'>
-                        <DialogHeader>
-                            <DialogTitle>Delete profile !</DialogTitle>
-                            <DialogDescription>
-                                This action cannot be undone. Please enter your username ({profileData.name}) to confirm.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <TextInput value={profileNamecheck} onChangeText={val=>setProfileNamecheck(val)} placeholder={profileData.name} className='border-[1px] rounded-sm p-2 border-gray-400 text-foreground' />
-                        <DialogFooter className='flex-row justify-end'>
-                            <Button variant="outline"><Text className='text-foreground' onPress={()=>{setIsOpen(false); console.log("closing")}}>Cancel</Text></Button>
-                            <Button disabled={profileData.name!==profileNamecheck} variant="destructive" onPress={()=>{setIsOpen(false)}}>
-                                <Text className='text-white' >Delete!</Text>
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            
+                    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                        <DialogTrigger asChild>
+                            <TouchableOpacity
+                                className='flex-row items-center justify-center p-4 bg-red-500 rounded-lg'
+                            >
+                                <AntDesign name="delete" size={18} color="white" />
+                                <Text className='ml-2 font-bold text-white'>Delete Account</Text>
+                            </TouchableOpacity>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-[425px]'>
+                            <DialogHeader>
+                                <DialogTitle>Delete profile !</DialogTitle>
+                                <DialogDescription>
+                                    This action cannot be undone. Please enter your username ({profileData.name}) to confirm.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <TextInput value={profileNamecheck} onChangeText={val => setProfileNamecheck(val)} placeholder={profileData.name} className='border-[1px] rounded-sm p-2 border-gray-400 text-foreground' />
+                            <DialogFooter className='flex-row justify-end'>
+                                <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false); console.log("closing") }}>Cancel</Text></Button>
+                                <Button disabled={profileData.name !== profileNamecheck} variant="destructive" onPress={() => { setIsOpen(false) }}>
+                                    <Text className='text-white' >Delete!</Text>
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
-        </ScrollView>
     );
 };
 
