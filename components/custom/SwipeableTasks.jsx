@@ -20,10 +20,10 @@ import { colorScheme } from 'nativewind';
 import Feather from '@expo/vector-icons/Feather';
 const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
-const themecontrol = NAV_THEME[colorScheme === "light" ? "light" : "dark"]
+
 
 function SimpleSwipable(props) {
-
+const themecontrol = NAV_THEME[colorScheme === "light" ? "light" : "dark"]
   const [data, setData] = useState(props.tasks);
   const itemRefs = useRef(new Map());
 
@@ -57,7 +57,7 @@ function SimpleSwipable(props) {
 export default SimpleSwipable;
 
 function RowItem({ item, itemRefs, drag, onPressDelete }) {
-
+const themecontrol = NAV_THEME[colorScheme === "light" ? "light" : "dark"]
   return (
     <View style={styles.itemBreak}>
       <SwipeableItem
@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
     height: 60,
     flex: 'row',
     alignItems: 'left',
-    backgroundColor: themecontrol.background,
+
+    backgroundColor: themecontrol.border,
     borderColor: themecontrol.border
   },
   itemBreak:{
