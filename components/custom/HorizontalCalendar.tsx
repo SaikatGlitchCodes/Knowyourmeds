@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
     View,
     Text,
@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ListRenderItem,
     NativeSyntheticEvent, NativeScrollEvent,
-    useColorScheme
+    useColorScheme,
+    Image,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -78,7 +79,7 @@ function generateDatesAround(centerDate: Date, daysBack: number, daysForward: nu
     return { dates: result, todayIndex };
 }
 
-const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, setSelectedDate}) => {
+const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({ selectedDate, setSelectedDate }) => {
     const { dates: initialDates, todayIndex } = generateDatesAround(new Date(), ITEMS_PER_PAGE, ITEMS_PER_PAGE);
 
     const [dates, setDates] = useState<DateItem[]>(initialDates);
@@ -91,6 +92,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
     const scrollOffset = useRef<number>(0);
     const colorScheme = useColorScheme();
     const textColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
+
     const handleScroll = useCallback(
         (event: NativeSyntheticEvent<NativeScrollEvent>) => {
             const offsetX = event.nativeEvent.contentOffset.x;
@@ -136,11 +138,26 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
             const centerDate = new Date(
                 direction === 'back' ? dates[0].date : dates[dates.length - 1].date
             );
-            const additionalDates = generateDatesAround(centerDate, direction === 'back' ? ITEMS_PER_PAGE : 0, direction === 'forward' ? ITEMS_PER_PAGE : 0).dates;
 
-            setDates((prevDates) =>
-                direction === 'back' ? [...additionalDates, ...prevDates] : [...prevDates, ...additionalDates]
-            );
+            const additionalDates = generateDatesAround(
+                centerDate,
+                direction === 'back' ? ITEMS_PER_PAGE : 0,
+                direction === 'forward' ? ITEMS_PER_PAGE : 0
+            ).dates;
+
+            setDates((prevDates) => {
+                if (direction === 'back') {
+                    const filteredDates = additionalDates.filter(
+                        (date) => !prevDates.some((d) => d.date === date.date)
+                    );
+                    return [...filteredDates, ...prevDates];
+                } else {
+                    const filteredDates = additionalDates.filter(
+                        (date) => !prevDates.some((d) => d.date === date.date)
+                    );
+                    return [...prevDates, ...filteredDates];
+                }
+            });
 
             if (direction === 'back') {
                 flatListRef.current?.scrollToOffset({
@@ -173,6 +190,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
                 >
                     <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
                     <Text className={`text-2xl ${item.isToday && 'text-white'} text-foreground`}>{item.date.split('-')[2]}</Text>
+                    <Image source={{uri: '../assets/images/icon.png'}} className='w-4 h-4' />
                 </TouchableOpacity>
             );
         },
@@ -193,13 +211,13 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({selectedDate, se
                 data={dates}
                 renderItem={renderDateItem}
                 keyExtractor={(item) => item.id}
-                initialScrollIndex={todayIndex+ITEMS_PER_PAGE*2}
+                initialScrollIndex={todayIndex}
                 snapToInterval={ITEM_WIDTH}
                 decelerationRate="fast"
-                onScroll={handleScroll} // Haptics while scrolling
-                scrollEventThrottle={16} // Higher frequency for smooth feedback
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
                 onEndReachedThreshold={0.5}
-                onEndReached={() => loadMoreDates('forward')} // Load more dates when scrolling forward
+                onEndReached={() => loadMoreDates('forward')}
                 onMomentumScrollBegin={() => {
                     if (scrollOffset.current <= ITEM_WIDTH * THRESHOLD) {
                         loadMoreDates('back');
@@ -220,7 +238,7 @@ const styles = {
         width: ITEM_WIDTH,
     },
     todayItem: {
-        backgroundColor: '#3b82f6', // Tailwind: bg-blue-500
+        backgroundColor: '#3b82f6',
         borderColor: '#3b82f6',
     },
     selectedItem: {
@@ -228,15 +246,15 @@ const styles = {
     },
     dayText: {
         fontSize: 12,
-        color: '#6b7280', // Tailwind: text-gray-500
+        color: '#6b7280',
     },
     dateText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#111827', // Tailwind: text-gray-900
+        color: '#111827',
     },
     todayText: {
-        color: '#ffffff', // Tailwind: text-white
+        color: '#ffffff',
     },
 };
 
