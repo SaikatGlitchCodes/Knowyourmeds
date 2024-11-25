@@ -12,7 +12,6 @@ export default function TabLayout() {
       screenOptions={{
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
@@ -24,6 +23,14 @@ export default function TabLayout() {
           headerShown: false,
           title: 'Home',
           tabBarIcon: ({ color }) => <FontAwesome name="home" size={29} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="camera"
+        options={{
+          headerShown: false,
+          title: 'Camera',
+          tabBarIcon: ({ color }) => <FontAwesome name="plus" size={29} color={color} />,
         }}
       />
       <Tabs.Screen
