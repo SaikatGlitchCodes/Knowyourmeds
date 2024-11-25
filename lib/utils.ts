@@ -7,12 +7,3 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const icons = [
-  "Material":{
-    "pill":"pill",
-
-  },
-  "FontAwesome":{
-
-  }
-]
