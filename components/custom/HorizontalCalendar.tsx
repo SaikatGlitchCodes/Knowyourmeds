@@ -198,7 +198,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({ selectedDate, s
     );
 
     return (
-        <View className="mx-2 my-8">
+        <View className="mx-2 my-3">
             <View className="flex-row justify-between mb-3">
                 <Text className="text-2xl text-foreground">{currentMonth}</Text>
                 <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color={textColor} />
