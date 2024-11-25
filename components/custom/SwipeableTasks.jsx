@@ -12,22 +12,20 @@ import SwipeableItem, {
   useSwipeableItemParams,
   OpenDirection,
 } from 'react-native-swipeable-item';
-import DraggableFlatList, {
-
-} from 'react-native-draggable-flatlist';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
-
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 function SimpleSwipable(props) {
   const [data, setData] = useState(props.tasks);
   const itemRefs = useRef(new Map());
   const colorScheme = useColorScheme();
   console.log('colorScheme', colorScheme)
-  const themeText=NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
+  const themeText=NAV_THEME[colorScheme === "light" ? "light" : "dark"];
   console.log('TextColor', themeText )
   const renderItem = (params) => {
     const onPressDelete = () => {
@@ -68,19 +66,22 @@ function SimpleSwipable(props) {
           snapPointsLeft={[150]}
           snapPointsRight={[150]}>
   
-          <TouchableOpacity
+          <TouchableOpacity 
   
             activeOpacity={1}
             onLongPress={drag}
-            style={styles.sliders}
-            className='border-2 rounded-full'>
+            style={{...styles.sliders, backgroundColor:themeText.slider, borderColor:'#27272a'}}
+            className='border-[1px] rounded-full '>
   
             <View className='flex-row items-center h-full px-5'>
               <Image source={{ uri: item.image }} style={{ height: 20, width: 20, marginRight: 20 }} />
               <View>
                 <Text className='text-2xl text-foreground'> {item.name} </Text>
+                <Text className='text-foreground'> {item.description} </Text>
+                <Text className='text-foreground'> <AntDesign name="clockcircleo" size={14} color={themeText.text} />  {item.time} </Text>
               </View>
             </View>
+            
   
           </TouchableOpacity>
         </SwipeableItem>
@@ -102,10 +103,11 @@ function SimpleSwipable(props) {
   
     return (
       <Animated.View
-        style={[styles.row, styles.underlayLeft, animStyle]} // Fade in on open
+        style={[styles.row, styles.underlayLeft, animStyle]}
+        className="rounded-full" // Fade in on open
       >
         <TouchableOpacity onPress={onPressDelete} >
-          <Feather name="trash-2" size={24} color={themeText} />
+          <Feather name="trash-2" size={24} color={themeText.text} />
         </TouchableOpacity>
       </Animated.View>
     );
@@ -114,9 +116,10 @@ function SimpleSwipable(props) {
   function UnderlayRight() {
     const { close } = useSwipeableItemParams();
     return (
-      <Animated.View style={[styles.row, styles.underlayRight]}>
+      <Animated.View style={[styles.row, styles.underlayRight]}
+      className="rounded-full">
         <TouchableOpacity onPressOut={() => close()}>
-          <Text style={styles.text}>CLOSE</Text>
+        <AntDesign name="check" size={24} color={themeText.text}/>
         </TouchableOpacity>
       </Animated.View>
     );
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   row: {
-
+    marginHorizontal:10,
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
@@ -155,22 +158,28 @@ const styles = StyleSheet.create({
   },
   underlayRight: {
     flex: 1,
+    padding: 12,
     backgroundColor: 'teal',
     justifyContent: 'flex-start',
+
+    paddingLeft:70
   },
   underlayLeft: {
     flex: 1,
     padding: 12,
     backgroundColor: 'tomato',
     justifyContent: 'flex-end',
-    borderRadius: 30,
+
+    paddingRight:70
     
   },
   sliders: {
     marginHorizontal: 7,
-    height: 60,
     flex: 'row',
     alignItems: 'left',
+    height:'100%',
+    paddingVertical:10
+
   },
   itemBreak:{
     marginBottom:10
