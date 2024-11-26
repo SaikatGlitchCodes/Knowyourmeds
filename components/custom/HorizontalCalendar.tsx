@@ -185,12 +185,12 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({ selectedDate, s
                         item.isToday && styles.todayItem,
                         isSelected && styles.selectedItem,
                     ]}
-                    className={`items-center py-8 mx-2 ${textColor} border-[1.5px] rounded-full border-gray-500 px-4`}
+                    className={`items-center py-6 mx-2 ${textColor} border-[1.5px] rounded-full border-gray-500 px-4`}
                     onPress={handlePress}
                 >
                     <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
                     <Text className={`text-2xl ${item.isToday && 'text-white'} text-foreground`}>{item.date.split('-')[2]}</Text>
-                    <Image source={{uri: '../assets/images/icon.png'}} className='w-4 h-4' />
+                    <Image source={require('../../assets/images/check.png')} className='h-7 w-7' />
                 </TouchableOpacity>
             );
         },
