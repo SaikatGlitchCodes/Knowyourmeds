@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native';
 import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import SimpleSwipable from '~/components/custom/SwipeableTasks';
+import { router } from 'expo-router';
 
 
 const Index = () => {
@@ -40,14 +41,16 @@ const Index = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{ flex: 1 }}
             >
-                <View className='flex-row items-center px-2'>
+                <View className='flex-row items-center px-2' >
                     <Avatar className='w-16 h-16' alt="Saikat's Avatar">
                         <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
                         <AvatarFallback>
                             <Text>ZN</Text>
                         </AvatarFallback>
                     </Avatar>
-                    <Text className='text-3xl ms-5 text-foreground'>
+                    <Text className='text-3xl ms-5 text-foreground' onPress={()=>{
+                        router.replace("/(auth)/welcome")
+                    }}>
                         Hi, <Text className='font-semibold '>Saikat</Text> 👋
                     </Text>
                 </View>

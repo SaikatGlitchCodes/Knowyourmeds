@@ -70,7 +70,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
             <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
               <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-              <Stack>
+              <Stack initialRouteName='(auth)/welcome'>
+                <Stack.Screen name='(auth)/welcome' options={{
+                  headerShown: false,
+                }} />
                 <Stack.Screen name='(tabs)' options={{
                   headerShown: false,
                 }} />
