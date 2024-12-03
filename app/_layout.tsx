@@ -13,6 +13,7 @@ import { ThemeToggle } from '~/components/ThemeToggle';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AuthProvider } from '~/context/account-context';
 
 
 const LIGHT_THEME: Theme = {
@@ -67,22 +68,25 @@ export default function RootLayout() {
   }
 
   return (
+
     <GestureHandlerRootView style={{ flex: 1 }}>
-            <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-              <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-              <Stack initialRouteName='(auth)/welcome'>
-                <Stack.Screen name='(auth)/welcome' options={{
-                  headerShown: false,
-                }} />
-                <Stack.Screen name='(tabs)' options={{
-                  headerShown: false,
-                }} />
-                <Stack.Screen name='+not-found' options={{
-                  headerShown: false,
-                }} />
-              </Stack>
-              <PortalHost />
-            </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+          <Stack initialRouteName='(auth)/welcome'>
+            <Stack.Screen name='(auth)/welcome' options={{
+              headerShown: false,
+            }} />
+            <Stack.Screen name='(tabs)' options={{
+              headerShown: false,
+            }} />
+            <Stack.Screen name='+not-found' options={{
+              headerShown: false,
+            }} />
+          </Stack>
+          <PortalHost />
+        </ThemeProvider>
+      </AuthProvider>
     </GestureHandlerRootView>
   );
 }

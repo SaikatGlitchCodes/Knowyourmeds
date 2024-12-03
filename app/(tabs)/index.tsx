@@ -5,7 +5,7 @@ import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import SimpleSwipable from '~/components/custom/SwipeableTasks';
 import { router } from 'expo-router';
-
+import { useAuth } from '~/context/account-context';
 
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -51,7 +51,7 @@ const Index = () => {
                     <Text className='text-3xl ms-5 text-foreground' onPress={()=>{
                         router.replace("/(auth)/welcome")
                     }}>
-                        Hi, <Text className='font-semibold '>Saikat</Text> 👋
+                        Hi, <Text className='font-semibold '></Text> 👋
                     </Text>
                 </View>
                 <Text className='px-4 mt-4 text-4xl text-foreground'>
