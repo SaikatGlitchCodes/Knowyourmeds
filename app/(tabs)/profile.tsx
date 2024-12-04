@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Modal, TouchableHighlight, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Feather, Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
 import { Separator } from '~/components/ui/separator';

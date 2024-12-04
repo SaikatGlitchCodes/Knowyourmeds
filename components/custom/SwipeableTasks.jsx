@@ -24,9 +24,9 @@ function SimpleSwipable(props) {
   const [data, setData] = useState(props.tasks);
   const itemRefs = useRef(new Map());
   const colorScheme = useColorScheme();
-  console.log('colorScheme', colorScheme)
-  const themeText=NAV_THEME[colorScheme === "light" ? "light" : "dark"];
-  console.log('TextColor', themeText )
+
+  const themeText = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
+
   const renderItem = (params) => {
     const onPressDelete = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -40,7 +40,7 @@ function SimpleSwipable(props) {
     );
   };
 
-  function RowItem({ item, itemRefs, drag, onPressDelete }) { 
+  function RowItem({ item, itemRefs, drag, onPressDelete }) {
     return (
       <View style={styles.itemBreak}>
         <SwipeableItem
@@ -65,24 +65,24 @@ function SimpleSwipable(props) {
           renderUnderlayRight={() => <UnderlayRight />}
           snapPointsLeft={[150]}
           snapPointsRight={[150]}>
-  
-          <TouchableOpacity 
-  
+
+          <TouchableOpacity
             activeOpacity={1}
             onLongPress={drag}
-            style={{...styles.sliders, backgroundColor:themeText.slider, borderColor:'#27272a'}}
-            className='border-[1px] rounded-full '>
-  
-            <View className='flex-row items-center h-full px-5'>
-              <Image source={{ uri: item.image }} style={{ height: 20, width: 20, marginRight: 20 }} />
-              <View>
-                <Text className='text-2xl text-foreground'> {item.name} </Text>
-                <Text className='text-foreground'> {item.description} </Text>
-                <Text className='text-foreground'> <AntDesign name="clockcircleo" size={14} color={themeText.text} />  {item.time} </Text>
+            style={{ ...styles.sliders, borderColor: 'gray', borderRadius: 15  }}
+            className='border-[1px] rounded-full bg-accent-foreground'>
+
+            <View className='flex-row items-center justify-between h-full px-5'>
+              <View className='flex-row items-center'>
+                <Image source={{ uri: item.image }} style={{ height: 20, width: 20, marginRight:8}} />
+                <View>
+                  <Text className='text-xl text-foreground'> {item.name} </Text>
+                  <Text className='text-foreground'> {item.description} </Text>
+                </View>
               </View>
+              <Text className='text-foreground'> <AntDesign name="clockcircleo" size={14} color={themeText.text} />  {item.time} </Text>
             </View>
-            
-  
+
           </TouchableOpacity>
         </SwipeableItem>
       </View>
@@ -100,11 +100,10 @@ function SimpleSwipable(props) {
       }),
       [percentOpen]
     );
-  
+
     return (
       <Animated.View
         style={[styles.row, styles.underlayLeft, animStyle]}
-        className="rounded-full" // Fade in on open
       >
         <TouchableOpacity onPress={onPressDelete} >
           <Feather name="trash-2" size={24} color={themeText.text} />
@@ -112,19 +111,19 @@ function SimpleSwipable(props) {
       </Animated.View>
     );
   };
-  
+
   function UnderlayRight() {
     const { close } = useSwipeableItemParams();
     return (
       <Animated.View style={[styles.row, styles.underlayRight]}
-      className="rounded-full">
+        className="rounded-full">
         <TouchableOpacity onPressOut={() => close()}>
-        <AntDesign name="check" size={24} color={themeText.text}/>
+          <AntDesign name="check" size={24} color={themeText.text} />
         </TouchableOpacity>
       </Animated.View>
     );
   }
-  
+
   return (
     <View style={styles.container}>
       <DraggableFlatList
@@ -143,9 +142,10 @@ export default SimpleSwipable;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // marginBottom: 50,
   },
   row: {
-    marginHorizontal:10,
+    marginHorizontal: 10,
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
@@ -161,28 +161,23 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: 'teal',
     justifyContent: 'flex-start',
-
-    paddingLeft:70
+    paddingLeft: 70
   },
   underlayLeft: {
     flex: 1,
     padding: 12,
     backgroundColor: 'tomato',
     justifyContent: 'flex-end',
-
-    paddingRight:70
-    
+    paddingRight: 70
   },
   sliders: {
-    marginHorizontal: 7,
+    marginHorizontal: 10,
     flex: 'row',
     alignItems: 'left',
-    height:'100%',
-    paddingVertical:10
-
+    height: '100%',
+    paddingVertical: 10,
   },
-  itemBreak:{
-    marginBottom:10
+  itemBreak: {
+    marginBottom: 10
   }
-
 });
