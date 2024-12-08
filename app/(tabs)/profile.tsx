@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Feather, Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
@@ -49,7 +49,7 @@ interface NotificationItem {
 const Profile: React.FC = () => {
     const colorScheme = useColorScheme();
     const textColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
-
+    
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [profileNamecheck, setProfileNamecheck] = useState<string>("");
@@ -193,7 +193,7 @@ const Profile: React.FC = () => {
                     >
                         <Text className='font-bold text-center text-red-500'>Sign Out</Text>
                     </TouchableOpacity>
-
+                    
                     <Dialog open={isOpen} onOpenChange={setIsOpen}>
                         <DialogTrigger asChild>
                             <TouchableOpacity

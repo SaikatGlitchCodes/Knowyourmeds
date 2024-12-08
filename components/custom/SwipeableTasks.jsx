@@ -20,13 +20,18 @@ const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-function SimpleSwipable(props) {
+function SimpleSwipable(props, ref) {
   const [data, setData] = useState(props.tasks);
   const itemRefs = useRef(new Map());
   const colorScheme = useColorScheme();
 
   const themeText = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
-
+  
+  const handlePressItem = (item) => {
+    
+    console.log('Pressed item: ' + item.name);
+  };
+  
   const renderItem = (params) => {
     const onPressDelete = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -69,12 +74,12 @@ function SimpleSwipable(props) {
           <TouchableOpacity
             activeOpacity={1}
             onLongPress={drag}
-            style={{ ...styles.sliders, borderColor: 'gray', borderRadius: 15  }}
-            className='border-[1px] rounded-full bg-accent-foreground'>
+            style={{ ...styles.sliders, backgroundColor: themeText.background, borderRadius: 15  }}
+            onPress={()=>handlePressItem(item)}>
 
             <View className='flex-row items-center justify-between h-full px-5'>
               <View className='flex-row items-center'>
-                <Image source={{ uri: item.image }} style={{ height: 20, width: 20, marginRight:8}} />
+                <View style={{borderRadius: 15, marginRight:8}} className='flex items-center justify-center p-4 bg-primary-foreground'><Image source={{ uri: item.image }} style={{ height: 20, width: 20}} /></View>
                 <View>
                   <Text className='text-xl text-foreground'> {item.name} </Text>
                   <Text className='text-foreground'> {item.description} </Text>
@@ -106,7 +111,7 @@ function SimpleSwipable(props) {
         style={[styles.row, styles.underlayLeft, animStyle]}
       >
         <TouchableOpacity onPress={onPressDelete} >
-          <Feather name="trash-2" size={24} color={themeText.text} />
+          <Feather name="trash-2" size={24} color="white" />
         </TouchableOpacity>
       </Animated.View>
     );
@@ -115,10 +120,9 @@ function SimpleSwipable(props) {
   function UnderlayRight() {
     const { close } = useSwipeableItemParams();
     return (
-      <Animated.View style={[styles.row, styles.underlayRight]}
-        className="rounded-full">
+      <Animated.View style={[styles.row, styles.underlayRight]}>
         <TouchableOpacity onPressOut={() => close()}>
-          <AntDesign name="check" size={24} color={themeText.text} />
+          <AntDesign name="check" size={24} color="white" />
         </TouchableOpacity>
       </Animated.View>
     );
@@ -126,6 +130,7 @@ function SimpleSwipable(props) {
 
   return (
     <View style={styles.container}>
+      <Text style={{paddingLeft:10}} className='mb-4 text-2xl font-semibold text-foreground'>To Take</Text>
       <DraggableFlatList
         keyExtractor={(item) => item.id}
         data={data}
@@ -142,7 +147,7 @@ export default SimpleSwipable;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // marginBottom: 50,
+    marginBottom: 40,
   },
   row: {
     marginHorizontal: 10,
@@ -150,6 +155,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 15
+    
   },
   text: {
     fontWeight: 'bold',

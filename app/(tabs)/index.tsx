@@ -5,7 +5,6 @@ import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import SimpleSwipable from '~/components/custom/SwipeableTasks';
 import { router } from 'expo-router';
-import { useColorScheme } from '~/lib/useColorScheme';
 
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -60,7 +59,6 @@ const Index = () => {
             image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
         }
     ]);
-    const { isDarkColorScheme } = useColorScheme();
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
     console.log('Selected date', selectedDate);
     return (
@@ -69,23 +67,23 @@ const Index = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{ flex: 1 }}
             >
-                <View className='p-4 my-4 rounded-3xl bg-primary-foreground'>
-                    <View className='flex-row items-center px-2' >
-                        <Avatar className='w-16 h-16' alt="Saikat's Avatar">
+                <View className='m-2 p-2 rounded-[30px] bg-primary-foreground'>
+                    <View className='flex-row items-center p-2' >
+                        <Avatar className='h-14 w-14' alt="Saikat's Avatar">
                             <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
                             <AvatarFallback>
                                 <Text>ZN</Text>
                             </AvatarFallback>
                         </Avatar>
-                        <Text className='text-3xl ms-5 text-foreground' onPress={() => {
+                        <Text className='text-2xl ms-2 text-foreground' onPress={() => {
                             router.replace("/(auth)/welcome")
                         }}>
                             Hi, <Text className='font-semibold '>Saikat Samanta</Text> 👋
                         </Text>
                     </View>
-                    <Text className='px-4 mt-4 text-2xl text-foreground'>
+                    {/* <Text className='px-4 mt-2 text-2xl font-light text-foreground'>
                         "Take your medicine today for a healthier tomorrow"
-                    </Text>
+                    </Text> */}
                     <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                 </View>
                 <SimpleSwipable tasks={tasks} />
