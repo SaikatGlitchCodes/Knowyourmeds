@@ -1,16 +1,12 @@
-# Starter base
+# POC
 
-A starting point to help you set up your project quickly and use the common components provided by `react-native-reusables`. The idea is to make it easier for you to get started.
+## State management 🏃‍♂️
+## History page {analytics & past data}
+## true sheet for more information ✅
+## Authentication 🏃‍♂️
+## Blog page with AI 
+## AI suggestions for healthy life 
+## Notifications [SMS & In APP] 
+## After a course completion {reminder to add more} 
 
-## Features
-
-- NativeWind v4
-- Dark and light mode
-    - Android Navigation Bar matches mode
-    - Persistant mode
-- Common components
-    - ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
-
-<img src="https://github.com/mrzachnugent/react-native-reusables/assets/63797719/42c94108-38a7-498b-9c70-18640420f1bc"
-     alt="starter-base-template"
-     style="width:270px;" />
+https://dev-81032541.okta.com
