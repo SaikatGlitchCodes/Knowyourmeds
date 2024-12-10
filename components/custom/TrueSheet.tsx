@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, useColorScheme } from 'react-native';
+import {Text, useColorScheme } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { NAV_THEME } from '~/lib/constants';
 

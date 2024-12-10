@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "587627411117",
+    "project_id": "prescription-14c43",
+    "storage_bucket": "prescription-14c43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587627411117:android:a0506d5c393266d8b37824",
+        "android_client_info": {
+          "package_name": "com.galaxies.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587627411117-haib7p5ui93mijri7jc801ii5kj0q4pm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGlc-ZboQrFIBaUsFLYQOUQXO9baJIXRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587627411117-haib7p5ui93mijri7jc801ii5kj0q4pm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "587627411117-aartrpe1j2jmododl23nblu39idrkh8b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.galaxies.firebase"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587627411117:android:2779ea82b27f2bc0b37824",
+        "android_client_info": {
+          "package_name": "com.pharmacy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587627411117-haib7p5ui93mijri7jc801ii5kj0q4pm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGlc-ZboQrFIBaUsFLYQOUQXO9baJIXRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587627411117-haib7p5ui93mijri7jc801ii5kj0q4pm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "587627411117-aartrpe1j2jmododl23nblu39idrkh8b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.galaxies.firebase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

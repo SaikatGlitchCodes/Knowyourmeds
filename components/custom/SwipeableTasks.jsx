@@ -77,7 +77,7 @@ function SimpleSwipable(props, ref) {
             style={{ ...styles.sliders, backgroundColor: themeText.background, borderRadius: 15  }}
             onPress={()=>handlePressItem(item)}>
 
-            <View className='flex-row items-center justify-between h-full px-5'>
+            <View className='flex-row items-center justify-between w-full h-full px-5'>
               <View className='flex-row items-center'>
                 <View style={{borderRadius: 15, marginRight:8}} className='flex items-center justify-center p-4 bg-primary-foreground'><Image source={{ uri: item.image }} style={{ height: 20, width: 20}} /></View>
                 <View>
