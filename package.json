@@ -8,6 +8,7 @@
     "dev:android": "expo start -c --android",
     "android": "expo start -c --android",
     "ios": "expo start -c --ios",
+    "build-ios": "react-native run-ios",
     "web": "expo start -c --web",
     "clean": "rm -rf .expo node_modules",
     "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
@@ -72,7 +73,8 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@types/react": "~18.3.12",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@react-native-community/cli": "latest"
   },
   "private": true
 }

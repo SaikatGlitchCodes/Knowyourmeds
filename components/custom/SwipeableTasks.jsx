@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Text,
   View,
@@ -20,18 +20,12 @@ const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-function SimpleSwipable(props, ref) {
-  const [data, setData] = useState(props.tasks);
+function SimpleSwipable({tasks, handlePressItem }) {
+  const [data, setData] = useState(tasks);
   const itemRefs = useRef(new Map());
   const colorScheme = useColorScheme();
-
   const themeText = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
-  
-  const handlePressItem = (item) => {
-    
-    console.log('Pressed item: ' + item.name);
-  };
-  
+
   const renderItem = (params) => {
     const onPressDelete = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -46,16 +40,23 @@ function SimpleSwipable(props, ref) {
   };
 
   function RowItem({ item, itemRefs, drag, onPressDelete }) {
+    const swipeableRef = useRef(null);
+
+    React.useEffect(() => {
+      if (swipeableRef.current && !itemRefs.current.has(item.key)) {
+        itemRefs.current.set(item.key, swipeableRef.current);
+      }
+      return () => {
+        itemRefs.current.delete(item.key); // Clean up when component unmounts
+      };
+    }, [item.key, itemRefs]);
+
     return (
       <View style={styles.itemBreak}>
         <SwipeableItem
           key={item.key}
           item={item}
-          ref={(ref) => {
-            if (ref && !itemRefs.current.get(item.key)) {
-              itemRefs.current.set(item.key, ref);
-            }
-          }}
+          ref={swipeableRef} // Use the useRef instance
           onChange={({ openDirection }) => {
             if (openDirection !== OpenDirection.NONE) {
               [...itemRefs.current.entries()].forEach(([key, ref]) => {
@@ -70,24 +71,39 @@ function SimpleSwipable(props, ref) {
           renderUnderlayRight={() => <UnderlayRight />}
           snapPointsLeft={[150]}
           snapPointsRight={[150]}>
-
           <TouchableOpacity
             activeOpacity={1}
             onLongPress={drag}
-            style={{ ...styles.sliders, backgroundColor: themeText.background, borderRadius: 15  }}
-            onPress={()=>handlePressItem(item)}>
-
-            <View className='flex-row items-center justify-between w-full h-full px-5'>
-              <View className='flex-row items-center'>
-                <View style={{borderRadius: 15, marginRight:8}} className='flex items-center justify-center p-4 bg-primary-foreground'><Image source={{ uri: item.image }} style={{ height: 20, width: 20}} /></View>
+            style={{
+              ...styles.sliders,
+              backgroundColor: themeText.background,
+              borderRadius: 15,
+            }}
+            onPress={() => handlePressItem(item)}>
+            <View className="flex-row items-center justify-between w-full h-full px-5">
+              <View className="flex-row items-center">
+                <View
+                  style={{ borderRadius: 15, marginRight: 8 }}
+                  className="flex items-center justify-center p-4 bg-primary-foreground">
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{ height: 20, width: 20 }}
+                  />
+                </View>
                 <View>
-                  <Text className='text-xl text-foreground'> {item.name} </Text>
-                  <Text className='text-foreground'> {item.description} </Text>
+                  <Text className="text-xl text-foreground"> {item.name} </Text>
+                  <Text className="text-foreground"> {item.description} </Text>
                 </View>
               </View>
-              <Text className='text-foreground'> <AntDesign name="clockcircleo" size={14} color={themeText.text} />  {item.time} </Text>
+              <Text className="text-foreground">
+                <AntDesign
+                  name="clockcircleo"
+                  size={14}
+                  color={themeText.text}
+                />{' '}
+                {item.time}{' '}
+              </Text>
             </View>
-
           </TouchableOpacity>
         </SwipeableItem>
       </View>
@@ -130,7 +146,7 @@ function SimpleSwipable(props, ref) {
 
   return (
     <View style={styles.container}>
-      <Text style={{paddingLeft:10}} className='mb-4 text-2xl font-semibold text-foreground'>To Take</Text>
+      <Text style={{ paddingLeft: 10 }} className='mb-4 text-2xl font-semibold text-foreground'>To Take</Text>
       <DraggableFlatList
         keyExtractor={(item) => item.id}
         data={data}
@@ -156,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15
-    
+
   },
   text: {
     fontWeight: 'bold',

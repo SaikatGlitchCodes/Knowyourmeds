@@ -1,46 +1,59 @@
-import React, { useCallback, useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
-import {Text, useColorScheme } from 'react-native';
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+  ReactNode,
+} from 'react';
+import { useColorScheme } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { NAV_THEME } from '~/lib/constants';
 
-const TrueSheet = forwardRef(({ item }: { item: string }, ref) => {
-  const snapPoints = useMemo(() => ['50%', '100%'], []);
+interface TrueSheetProps {
+  children: ReactNode; // Children components to render inside the sheet
+}
+
+const TrueSheet = forwardRef(({ children }: TrueSheetProps, ref) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // Snap points for BottomSheet
+  const snapPoints = useMemo(() => ['50%', '100%'], []);
+
+  // Handle methods exposed to parent
+  useImperativeHandle(ref, () => ({
+    snapToIndex: (index: number) => bottomSheetRef.current?.snapToIndex(index),
+    close: () => bottomSheetRef.current?.close(),
+  }));
 
   // Callbacks
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    console.log('Sheet changed to index:', index);
   }, []);
-  const handleClose = () => bottomSheetRef.current?.close();
+
   const renderBackDrop = useCallback(
-    (props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />,
+    (props: any) => (
+      <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
+    ),
     []
   );
 
-  // Expose methods to parent
-  useImperativeHandle(ref, () => ({
-    snapToIndex: (index: number) => bottomSheetRef.current?.snapToIndex(index),
-    close: handleClose,
-  }));
-
-  // Theme setter
+  // Theme handling
   const colorScheme = useColorScheme();
   const theme = NAV_THEME[colorScheme === 'light' ? 'light' : 'dark'];
 
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      onChange={handleSheetChanges}
       snapPoints={snapPoints}
       index={-1}
       enablePanDownToClose={true}
       backdropComponent={renderBackDrop}
+      onChange={handleSheetChanges}
       handleIndicatorStyle={{ backgroundColor: theme.icon }}
-      backgroundStyle={{ backgroundColor: theme.background }}
+      backgroundStyle={{ backgroundColor: theme.border }}
     >
-      <BottomSheetView className="items-center flex-1 p-9">
-        <Text className="text-foreground">Selected Item: {item}</Text>
-      </BottomSheetView>
+      <BottomSheetView className="items-center flex-1 p-9">{children}</BottomSheetView>
     </BottomSheet>
   );
 });

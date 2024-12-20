@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import Swiper from 'react-native-swiper'
-import { Button } from '~/components/ui/button'
+import { Button } from '../../components/ui/button'
 
 const WelcomeScreens = [
     {
