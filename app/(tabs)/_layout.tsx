@@ -11,6 +11,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName='camera'
       screenOptions={{
         tabBarStyle: Platform.select({
           ios: {

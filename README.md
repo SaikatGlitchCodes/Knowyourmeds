@@ -12,3 +12,5 @@
 https://dev-81032541.okta.com
 
 https://github.com/firebase/firebase-ios-sdk
+https://dribbble.com/shots/14717678-Pharmacist-View-of-Prescriptions-To-Do
+https://dribbble.com/shots/23235852-Medication-Reminder-Mobile-App

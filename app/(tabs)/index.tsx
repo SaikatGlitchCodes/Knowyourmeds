@@ -62,6 +62,7 @@ const Index = () => {
         }
     ]);
     const sheetRef = useRef<BottomSheet>(null);
+    
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
     console.log('Selected date', selectedDate);
     const handlePressItem = (item:any) => {
@@ -88,14 +89,14 @@ const Index = () => {
                             Hi, <Text className='font-semibold '>Saikat Samanta</Text> 👋
                         </Text>
                     </View>
-                    <Text className='px-4 mt-2 text-2xl font-light text-foreground'>
+                    <Text className='px-4 mt-2 text-3xl font-light text-foreground'>
                         "Take your medicine today for a healthier tomorrow"
                     </Text>
                     <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                 </View>
                 <SimpleSwipable tasks={tasks} handlePressItem={handlePressItem} />
                 <TrueSheet ref={sheetRef} >
-                    <Text>Hello </Text>
+                    <Text className="text-foreground">Hello </Text>
                 </TrueSheet>
             </KeyboardAvoidingView>
         </SafeAreaView>
