@@ -1,69 +1,77 @@
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import * as Crypto from 'expo-crypto';
+import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
 
-export const takePhoto = async () => {
-    try {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [9, 16],
-        quality: 1,
-      });
-      const newUuid = Crypto.randomUUID();
-      setUuid(newUuid); // Save UUID in state
-      console.log('Photo result:', result);
+export const handlePhotoAndAnalysis = async () => {
+  try {
+    // Step 1: Take photo
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [9, 16],
+      quality: 1,
+    });
 
-      if (!result.canceled && result.assets.length > 0) {
-        const { uri } = result.assets[0];
-        setPhoto(uri);
-        console.log('Photo URI:', uri);
-      } else {
-        console.log('User cancelled photo action');
-      }
-    } catch (error) {
-      console.error('Error taking photo:', error);
-    }
-  };
-
-export const uploadImage = async () => {
-    if (!photo) {
-      setMessage('No photo to upload');
-      return;
+    if (result.canceled || !result.assets.length) {
+      throw new Error('Photo capture cancelled');
     }
 
-    setUploading(true);
-    setMessage('');
+    const { uri } = result.assets[0];
 
-    try {
-      const response = await fetch(photo);
-      const blob = await response.blob();
-
-      const storage = getStorage();
-      const storageRef = ref(storage, uuid);
-
+    // Step 2: Upload to Firebase
+    const newUuid = Crypto.randomUUID();
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    
+    const storage = getStorage();
+    const storageRef = ref(storage, newUuid);
+    
+    // Create promise for upload
+    const uploadPromise = new Promise((resolve, reject) => {
       const uploadTask = uploadBytesResumable(storageRef, blob);
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
+          console.log('Upload progress: ' + progress + '%');
         },
-        (error) => {
-          console.error('Upload failed:', error);
-          setMessage('Upload failed: ' + error.message);
-          setUploading(false);
-        },
-        () => {
-          setUploading(false);
-          setMessage('Upload successful!');
-          console.log('Upload successful');
-        }
+        reject,
+        resolve
       );
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setMessage('Upload failed: ' + error.message);
-      setUploading(false);
-    }
+    });
 
-  };
+    await uploadPromise;
+
+    // Step 3 & 4: Convert to base64 and analyze
+    const base64Image = await getImageBase64(uri);
+    const analysisResponse = await axios.post('http://192.168.6.99:3000/generate', {
+      imageBase64: base64Image,
+    });
+
+    return {
+      success: true,
+      photoUri: uri,
+      uploadId: newUuid,
+      analysisResult: analysisResponse.data.response
+    };
+
+  } catch (error) {
+    console.error('Error in photo process:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+const getImageBase64 = async (uri) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+  });
+};

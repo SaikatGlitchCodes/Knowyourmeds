@@ -6,7 +6,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Dialog, DialogFooter, DialogContent, DialogHeader, DialogDescription, DialogTitle } from '~/components/ui/dialog';
 import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
-import { takePhoto, uploadImage } from '../../util/handlingCameraUpload';
+import { handlePhotoAndAnalysis } from '../../util/handlingCameraUpload';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
 
@@ -53,6 +53,7 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
       methods: () => {
+        handlePhotoAndAnalysis();
         console.log("Prescription App")
       }
     }
