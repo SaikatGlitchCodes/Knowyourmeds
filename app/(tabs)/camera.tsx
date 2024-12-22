@@ -8,7 +8,6 @@ import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
-import CameraAnalyzer from '~/components/custom/handlingCameraUpload'
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -16,12 +15,8 @@ if (!initializeApp.apps?.length) {
 }
 
 const camera = () => {
-  const [photo, setPhoto] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState('');
   const trueSheetRef = useRef<BottomSheet>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [uuid, setUuid] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -85,14 +80,6 @@ const camera = () => {
             }
           </View>
         </View>
-        <CameraAnalyzer
-          onComplete={(result:any) => {
-            console.log('Analysis complete:', result.analysisResult);
-          }}
-          onError={(error:any) => {
-            console.error('Error:', error);
-          }}
-        />
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
             <Text className="text-foreground">Hello</Text>
