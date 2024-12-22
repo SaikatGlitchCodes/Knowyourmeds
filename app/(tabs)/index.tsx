@@ -95,7 +95,7 @@ const Index = () => {
                 </View>
                 <SimpleSwipable tasks={tasks} handlePressItem={handlePressItem} />
                 <TrueSheet ref={sheetRef} >
-                    <Text>Hello </Text>
+                    <Text className="text-foreground">Hello </Text>
                 </TrueSheet>
             </KeyboardAvoidingView>
         </SafeAreaView>

@@ -11,6 +11,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+    initialRouteName='index'
       screenOptions={{
         tabBarStyle: Platform.select({
           ios: {
@@ -19,6 +20,7 @@ export default function TabLayout() {
           default: {},
         }),
       }}>
+        
       <Tabs.Screen
         name="index"
         options={{
