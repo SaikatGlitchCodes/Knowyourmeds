@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { SafeAreaView, ScrollView } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, View, Text, FlatList, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
-import SwipeableCard from '~/components/custom/SliderInfo';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import SimpleSwipable from '~/components/custom/SwipeableTasks';
+import { router } from 'expo-router';
+import TrueSheet from '~/components/custom/TrueSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -14,48 +15,92 @@ const Index = () => {
             id: '1',
             name: 'Loratadine. 10mg',
             description: '1 pill, once per day',
-            time: '16:00 pm',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOt0A23mzyuU8Z_N2qcOSKwvhfU1CZy8X8w&s',
+            time: '16:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
         },
         {
             id: '2',
             name: 'Ibuprofen. 200mg',
             description: '2 pills, twice per day',
-            time: '08:00 am',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOt0A23mzyuU8Z_N2qcOSKwvhfU1CZy8X8w&s',
+            time: '08:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
         },
         {
-            id: '3',
+            id: '4',
             name: 'Paracetamol. 500mg',
             description: '1 pill, every 6 hours',
-            time: '12:00 pm',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEOt0A23mzyuU8Z_N2qcOSKwvhfU1CZy8X8w&s',
+            time: '12:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
         },
+        {
+            id: '5',
+            name: 'Ibuprofen. 200mg',
+            description: '2 pills, twice per day',
+            time: '08:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
+        },
+        {
+            id: '6',
+            name: 'Paracetamol. 500mg',
+            description: '1 pill, every 6 hours',
+            time: '12:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
+        },
+        {
+            id: '7',
+            name: 'Ibuprofen. 200mg',
+            description: '2 pills, twice per day',
+            time: '08:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
+        },
+        {
+            id: '8',
+            name: 'Paracetamol. 500mg',
+            description: '1 pill, every 6 hours',
+            time: '12:00',
+            image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
+        }
     ]);
+    const sheetRef = useRef<BottomSheet>(null);
+    
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
     console.log('Selected date', selectedDate);
+    const handlePressItem = (item:any) => {
+        sheetRef.current?.snapToIndex(0);
+        console.log('Pressed item: ' + item.name);
+    };
     return (
-        <SafeAreaView className='flex-1 '>
-            <View className='p-4'>
-                <View className='flex-row items-center gap-x-3'>
-                    <Avatar className='w-10 h-10' alt="Zach Nugent's Avatar">
-                        <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
-                        <AvatarFallback>
-                            <Text>ZN</Text>
-                        </AvatarFallback>
-                    </Avatar>
-                    <Text className='text-2xl text-foreground'>Hi, <Text className='font-semibold '>Saikat</Text> 👋</Text>
+        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={{ flex: 1 }}
+            >
+                <View className='m-2 p-2 rounded-[15px] bg-primary-foreground'>
+                    <View className='flex-row items-center p-2' >
+                        <Avatar className='h-14 w-14' alt="Saikat's Avatar">
+                            <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
+                            <AvatarFallback>
+                                <Text>ZN</Text>
+                            </AvatarFallback>
+                        </Avatar>
+                        <Text className='text-2xl ms-2 text-foreground' onPress={() => {
+                            router.replace("/(auth)/welcome")
+                        }}>
+                            Hi, <Text className='font-semibold '>Saikat Samanta</Text> 👋
+                        </Text>
+                    </View>
+                    <Text className='px-4 mt-2 text-3xl font-light text-foreground'>
+                        "Take your medicine today for a healthier tomorrow"
+                    </Text>
+                    <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                 </View>
-                <Text className='mt-6 text-3xl text-card-foreground'>"Take your medicine today for a healthier tomorrow"</Text>
-                <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-                <GestureHandlerRootView className='flex-1'>
-                   <SwipeableCard/>
-                </GestureHandlerRootView>
-            </View>
+                <SimpleSwipable tasks={tasks} handlePressItem={handlePressItem} />
+                <TrueSheet ref={sheetRef} >
+                    <Text className="text-foreground">Hello </Text>
+                </TrueSheet>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
-}
-
-const styles = StyleSheet.create({})
+};
 
 export default Index;
