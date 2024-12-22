@@ -49,7 +49,7 @@ const TrueSheet = forwardRef(({ children, snapPoint, handleSheetChanges }: TrueS
       backdropComponent={renderBackDrop}
       onChange={handleSheetChanges}
       handleIndicatorStyle={{ backgroundColor: theme.icon }}
-      backgroundStyle={{ backgroundColor: theme.border }}
+      backgroundStyle={{ backgroundColor: theme.truesheet }}
     >
       <BottomSheetView className="items-center flex-1 p-9">{children}</BottomSheetView>
     </BottomSheet>

@@ -7,6 +7,7 @@ import SimpleSwipable from '~/components/custom/SwipeableTasks';
 import { router } from 'expo-router';
 import TrueSheet from '~/components/custom/TrueSheet';
 import BottomSheet from '@gorhom/bottom-sheet';
+import MedicationSheet from '~/components/custom/MedicationSheet';
 
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -61,11 +62,13 @@ const Index = () => {
             image: 'https://pics.clipartpng.com/Red_and_White_Pill_Capsule_PNG_Clipart-360.png',
         }
     ]);
+    const [selectedTask, setSelectedTask]=useState({});
     const sheetRef = useRef<BottomSheet>(null);
     
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
     console.log('Selected date', selectedDate);
     const handlePressItem = (item:any) => {
+        setSelectedTask(item);
         sheetRef.current?.snapToIndex(0);
         console.log('Pressed item: ' + item.name);
     };
@@ -96,7 +99,8 @@ const Index = () => {
                 </View>
                 <SimpleSwipable tasks={tasks} handlePressItem={handlePressItem} />
                 <TrueSheet ref={sheetRef} >
-                    <Text className="text-foreground">Hello </Text>
+                    <Text>AI</Text>
+                    {/* <MedicationSheet medicine={selectedTask}/> */}
                 </TrueSheet>
             </KeyboardAvoidingView>
         </SafeAreaView>
