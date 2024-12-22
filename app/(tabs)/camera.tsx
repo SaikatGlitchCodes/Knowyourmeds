@@ -8,6 +8,7 @@ import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
+import CameraAnalyzer from '~/components/custom/CameraUploading'
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -79,6 +80,13 @@ const camera = () => {
               ))
             }
           </View>
+          <CameraAnalyzer
+            onComplete={(result: any) => {
+              console.log('Analysis complete:', result.analysisResult);
+            }}
+            onError={(error: any) => {
+              console.error('Error:', error);
+            }} />
         </View>
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
