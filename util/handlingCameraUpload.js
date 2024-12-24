@@ -1,9 +1,11 @@
-import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, useState } from 'firebase/storage';
 import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-
+import BottomSheet from '@gorhom/bottom-sheet';
+import TrueSheet from '~/components/custom/TrueSheet';
 export const handlePhotoAndAnalysis = async () => {
+   
   try {
     // Step 1: Take photo
     const result = await ImagePicker.launchCameraAsync({
@@ -49,11 +51,18 @@ export const handlePhotoAndAnalysis = async () => {
       imageBase64: base64Image,
     });
     console.log('')
+    const stuff = analysisResponse.data.response
+    const cleanInput = stuff.replace(/```json|```/g, '').trim();
+
+    const data=JSON.parse(cleanInput)
+    console.log(data.patientname)
     return {
       success: true,
       photoUri: uri,
       uploadId: newUuid,
-      analysisResult: analysisResponse.data.response
+      analysisResult: analysisResponse.data.response,
+      finalData: console.log(cleanInput),
+      datatoPrint: data
     };
 
   } catch (error) {
@@ -74,4 +83,5 @@ const getImageBase64 = async (uri) => {
     reader.onloadend = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
   });
+
 };

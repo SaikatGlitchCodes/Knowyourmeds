@@ -8,7 +8,7 @@ import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
-import CameraAnalyzer from '~/components/custom/CameraUploading'
+import { handlePhotoAndAnalysis } from '~/util/handlingCameraUpload';
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -18,6 +18,18 @@ if (!initializeApp.apps?.length) {
 const camera = () => {
   const trueSheetRef = useRef<BottomSheet>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [jsonData, setJsonData] = useState("");
+  const [patientname, setPatientname] = useState("");
+  const [medicine, setMedicine] = useState("");
+  const [dose, setDose] = useState("");
+  const [form, setForm] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [taken, setTaken] = useState(false);
+  const [dangerousOrControlledSubstance, setDangerousOrControlledSubstance] = useState("");
+  const [frequency, setFrequency] = useState({});
+  const [specialInstructions, setSpecialInstructions] = useState("");
+
 
   useEffect(() => {
     (async () => {
@@ -41,15 +53,37 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="text-shadow" size={50} color="#3b82f6" />,
       name: 'Manual',
       methods: () => {
-        trueSheetRef?.current?.snapToIndex(2)
+        trueSheetRef?.current?.snapToIndex(1)
         console.log("Manual")
       }
     },
     {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
-      methods: () => {
-        console.log("Prescription App")
+      methods: async () => {
+        console.log("Camera button pressed");
+        try {
+          const result = await handlePhotoAndAnalysis();
+          if (result.success) {
+            setJsonData(result.datatoPrint); // Update state with the JSON object
+            trueSheetRef?.current?.snapToIndex(1); // Open TrueSheet
+            setPatientname(jsonData.patientname);
+            setMedicine(jsonData.medicine);
+            setDose(jsonData.dose);
+            setForm(jsonData.form);
+            setManufacturer(jsonData.manufacturer);
+            setQuantity(jsonData.quantity);
+            setTaken(jsonData.taken);
+            setDangerousOrControlledSubstance(jsonData.dangerousorcontrolledsubstance);
+            setFrequency(jsonData.frequency);
+            setSpecialInstructions(jsonData.special_instructions);
+
+          }
+
+
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
     }
   ]
@@ -80,17 +114,20 @@ const camera = () => {
               ))
             }
           </View>
-          <CameraAnalyzer
-            onComplete={(result: any) => {
-              console.log('Analysis complete:', result.analysisResult);
-            }}
-            onError={(error: any) => {
-              console.error('Error:', error);
-            }} />
+
         </View>
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
-            <Text className="text-foreground">Hello</Text>
+            <Text className='text-foreground'>Patient Name: {jsonData.patientname}</Text>
+            <Text className='text-foreground'>Medicine: {jsonData.medicine}</Text>
+            <Text className='text-foreground'>Dose: {jsonData.dose}</Text>
+            <Text className='text-foreground'>Form: {jsonData.form}</Text>
+            <Text className='text-foreground'>Manufacturer: {jsonData.manufacturer}</Text>
+            <Text className='text-foreground'>Quantity: {jsonData.quantity}</Text>
+            <Text className='text-foreground'>Taken: {jsonData.taken ? "Yes" : "No"}</Text>
+            <Text className='text-foreground'>Dangerous or Controlled Substance: {jsonData.dangerousOrControlledSubstance}</Text>
+            {/* <Text className='text-foreground'>Frequency: {frequency}</Text> */}
+            <Text className='text-foreground'>Special Instructions: {jsonData.special_instructions}</Text>
           </View>
         </TrueSheet>
 
