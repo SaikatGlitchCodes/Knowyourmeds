@@ -5,13 +5,14 @@ import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, View, Text} from 'react-native';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import FloatLoader from '~/components/custom/FloatLoader';
+import { Button } from '~/components/ui/button';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -70,6 +71,7 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <View className='relative flex-1'>
+          
           <Stack initialRouteName='(tabs)'>
             <Stack.Screen name='(auth)/welcome' options={{
               headerShown: false,
@@ -81,6 +83,7 @@ export default function RootLayout() {
               headerShown: false,
             }} />
           </Stack>
+          <Button className='bg-red-500 bg-red'><Text>Click</Text></Button>
           <FloatLoader />
         </View>
         <PortalHost />
