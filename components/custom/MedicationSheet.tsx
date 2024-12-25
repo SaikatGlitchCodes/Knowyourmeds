@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import moment from 'moment';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import calculateProgressPercentage from '~/util/calculateProgress';
 import { ScrollView } from 'react-native-gesture-handler';
 import iconRef from '~/util/MedicineIcon';
 interface MedicationSheetProps {
