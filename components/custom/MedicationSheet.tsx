@@ -4,8 +4,9 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import moment from 'moment';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import iconRef from '~/util/MedicineIcon';
+import calculateProgressPercentage from '~/util/calculateProgress';
 import { ScrollView } from 'react-native-gesture-handler';
+import iconRef from '~/util/MedicineIcon';
 interface MedicationSheetProps {
     medicine: {
         id: number,
@@ -17,6 +18,7 @@ interface MedicationSheetProps {
 }
 
 const MedicationSheet = ({ medicine }: any) => {
+    console.log(medicine.progressPercentage)
     return (
         <View className='w-full gap-y-5'>
             <View>
@@ -43,7 +45,7 @@ const MedicationSheet = ({ medicine }: any) => {
             </View>
             <View className='p-5 rounded-xl bg-primary-foreground'>
                 <View className='flex-row items-center gap-x-4'>
-                    <Image source={require('~/assets/types/Injection.png')} className='p-2 rounded h-14 w-14' />
+                    {iconRef(medicine)}
                     <Text className='text-2xl'>{medicine.type}</Text>
                 </View>
                 <View className='flex-row justify-between mt-4 gap-x-4'>
@@ -91,7 +93,7 @@ const MedicationSheet = ({ medicine }: any) => {
                     </View>
                 </View>
                 <View className='p-4 rounded-2xl w-[220] bg-[#3b82f6] flex-col justify-between relative'>
-                    {iconRef(medicine)}
+                    <Image source={require('~/assets/images/card_design.png')} className='absolute p-2 rounded bottom-10 -right-10 h-60 w-60' />
                     <View className='flex items-center justify-center w-12 h-12 bg-white rounded-md'>
                         <Text>AI</Text>
                     </View>
