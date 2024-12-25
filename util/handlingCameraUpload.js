@@ -1,4 +1,5 @@
-import { getStorage, ref, uploadBytesResumable, useState } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
@@ -62,7 +63,8 @@ export const handlePhotoAndAnalysis = async () => {
       uploadId: newUuid,
       analysisResult: analysisResponse.data.response,
       finalData: console.log(cleanInput),
-      datatoPrint: data
+      datatoPrint: data,
+      loadingComp:  <ActivityIndicator size="large" />
     };
 
   } catch (error) {

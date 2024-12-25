@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -18,7 +18,7 @@ if (!initializeApp.apps?.length) {
 const camera = () => {
   const trueSheetRef = useRef<BottomSheet>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [jsonData, setJsonData] = useState("");
+  const [jsonData, setJsonData] = useState<any>({});
   const [patientname, setPatientname] = useState("");
   const [medicine, setMedicine] = useState("");
   const [dose, setDose] = useState("");
@@ -29,7 +29,8 @@ const camera = () => {
   const [dangerousOrControlledSubstance, setDangerousOrControlledSubstance] = useState("");
   const [frequency, setFrequency] = useState({});
   const [specialInstructions, setSpecialInstructions] = useState("");
-
+  const [timesWithPills, setTimesWithPills] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -62,27 +63,40 @@ const camera = () => {
       name: 'AI Camera',
       methods: async () => {
         console.log("Camera button pressed");
+        setLoading(true); // Show loading only after camera is pressed
         try {
           const result = await handlePhotoAndAnalysis();
+          
           if (result.success) {
             setJsonData(result.datatoPrint); // Update state with the JSON object
+            
             trueSheetRef?.current?.snapToIndex(1); // Open TrueSheet
-            setPatientname(jsonData.patientname);
-            setMedicine(jsonData.medicine);
-            setDose(jsonData.dose);
-            setForm(jsonData.form);
-            setManufacturer(jsonData.manufacturer);
-            setQuantity(jsonData.quantity);
-            setTaken(jsonData.taken);
-            setDangerousOrControlledSubstance(jsonData.dangerousorcontrolledsubstance);
-            setFrequency(jsonData.frequency);
-            setSpecialInstructions(jsonData.special_instructions);
+            const frequency = result.datatoPrint.frequency;
+            if (frequency) {
+              const times = Object.entries(frequency)
+                .filter(([_, value]) => value.number_of_tablets > 0)
+                .map(([time, value]) => `${time}: ${value.number_of_tablets} tablet(s)`);
+              setTimesWithPills(times);
+            }
+
+            // setPatientname(jsonData.patientname);
+            // setMedicine(jsonData.medicine);
+            // setDose(jsonData.dose);
+            // setForm(jsonData.form);
+            // setManufacturer(jsonData.manufacturer);
+            // setQuantity(jsonData.quantity);
+            // setTaken(jsonData.taken);
+            // setDangerousOrControlledSubstance(jsonData.dangerousorcontrolledsubstance);
+            // setFrequency(jsonData.frequency);
+            // setSpecialInstructions(jsonData.special_instructions);
 
           }
 
 
         } catch (error) {
           console.error("Error:", error);
+        } finally {
+          setLoading(false); // Hide loading after process completes
         }
       }
     }
@@ -118,19 +132,30 @@ const camera = () => {
         </View>
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
-            <Text className='text-foreground'>Patient Name: {jsonData.patientname}</Text>
-            <Text className='text-foreground'>Medicine: {jsonData.medicine}</Text>
-            <Text className='text-foreground'>Dose: {jsonData.dose}</Text>
-            <Text className='text-foreground'>Form: {jsonData.form}</Text>
-            <Text className='text-foreground'>Manufacturer: {jsonData.manufacturer}</Text>
-            <Text className='text-foreground'>Quantity: {jsonData.quantity}</Text>
-            <Text className='text-foreground'>Taken: {jsonData.taken ? "Yes" : "No"}</Text>
-            <Text className='text-foreground'>Dangerous or Controlled Substance: {jsonData.dangerousOrControlledSubstance}</Text>
+            <Text>Name of Patient Prescribed to</Text>
+            <TextInput className='text-foreground text-xl' value={jsonData.patientname}/>
+            <Text className='text-foreground text-xl'>Medicine: {jsonData.medicine}</Text>
+            <Text className='text-foreground text-xl'>Dose: {jsonData.dose}</Text>
+            <Text className='text-foreground text-xl'>Form: {jsonData.form}</Text>
+            <Text className='text-foreground text-xl'>Manufacturer: {jsonData.manufacturer}</Text>
+            <Text className='text-foreground text-xl'>Quantity: {jsonData.quantity}</Text>
+            <Text className='text-foreground text-xl'>Taken: {jsonData.taken ? "Yes" : "No"}</Text>
+            {/* <Text className='text-foreground text-xl'>Dangerous or Controlled Substance: {jsonData.dangerousOrControlledSubstance}</Text> */}
             {/* <Text className='text-foreground'>Frequency: {frequency}</Text> */}
-            <Text className='text-foreground'>Special Instructions: {jsonData.special_instructions}</Text>
+            <Text className='text-foreground text-xl'>Special Instructions: {jsonData.special_instructions}</Text>
+            {timesWithPills.length > 0 ? (
+              timesWithPills.map((time, index) => (
+                <Text key={index} className='text-foreground text-xl'>
+                  Schedule: {time}
+                </Text>
+              ))
+            ) : (
+              <Text className='text-foreground'>No pills to take.</Text>
+            )}
+
           </View>
         </TrueSheet>
-
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
         <Dialog open={isOpen} >
           <DialogContent className='sm:max-w-[425px]'>
             <DialogHeader>
@@ -141,7 +166,7 @@ const camera = () => {
             </DialogHeader>
             <DialogFooter className='flex-row justify-end'>
               <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false); console.log("closing") }}>Cancel</Text></Button>
-              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(2) }}>
+              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(1) }}>
                 <Text className='text-white' >Proceed!</Text>
               </Button>
             </DialogFooter>
