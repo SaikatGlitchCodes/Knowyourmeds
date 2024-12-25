@@ -86,13 +86,13 @@ function SimpleSwipable({tasks, handlePressItem }) {
                   style={{ borderRadius: 15, marginRight: 8 }}
                   className="flex items-center justify-center p-4 bg-primary-foreground">
                   <Image
-                    source={{ uri: item.image }}
-                    style={{ height: 20, width: 20 }}
+                    source={require(`~/assets/types/Injection.png`)}
+                    style={{ height: 30, width: 30 }}
                   />
                 </View>
                 <View>
-                  <Text className="text-xl text-foreground"> {item.name} </Text>
-                  <Text className="text-foreground"> {item.description} </Text>
+                  <Text className="text-xl font-semibold text-foreground"> {item.name} | {item.dose} </Text>
+                  <Text className="text-foreground"> {item.type} </Text>
                 </View>
               </View>
               <Text className="text-foreground">
@@ -100,8 +100,7 @@ function SimpleSwipable({tasks, handlePressItem }) {
                   name="clockcircleo"
                   size={14}
                   color={themeText.text}
-                />{' '}
-                {item.time}{' '}
+                />{' '}{item.timeRange}{' '}
               </Text>
             </View>
           </TouchableOpacity>

@@ -8,7 +8,7 @@ import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
-import CameraAnalyzer from '~/components/custom/CameraUploading'
+import {handlePhotoAndAnalysis} from '~/util/handlingCameraUpload'
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -31,6 +31,7 @@ const camera = () => {
   const scanNFC = () => {
     console.log("Scan NFC")
   }
+  
   const methodsToCreatePrescription = [
     {
       logo: <MaterialCommunityIcons name="nfc" size={50} color="#3b82f6" />,
@@ -41,7 +42,7 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="text-shadow" size={50} color="#3b82f6" />,
       name: 'Manual',
       methods: () => {
-        trueSheetRef?.current?.snapToIndex(2)
+        trueSheetRef?.current?.snapToIndex(1)
         console.log("Manual")
       }
     },
@@ -49,13 +50,13 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
       methods: () => {
+        handlePhotoAndAnalysis();
         console.log("Prescription App")
       }
     }
   ]
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('Sheet changed to index:', index);
     if (index === -1) {
       setIsOpen(true);
     }
@@ -80,13 +81,6 @@ const camera = () => {
               ))
             }
           </View>
-          <CameraAnalyzer
-            onComplete={(result: any) => {
-              console.log('Analysis complete:', result.analysisResult);
-            }}
-            onError={(error: any) => {
-              console.error('Error:', error);
-            }} />
         </View>
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
@@ -103,7 +97,7 @@ const camera = () => {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className='flex-row justify-end'>
-              <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false); console.log("closing") }}>Cancel</Text></Button>
+              <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false);}}>Cancel</Text></Button>
               <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(2) }}>
                 <Text className='text-white' >Proceed!</Text>
               </Button>
