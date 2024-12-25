@@ -45,7 +45,7 @@ const MedicationSheet = ({ medicine }: any) => {
             </View>
             <View className='p-5 rounded-xl bg-primary-foreground'>
                 <View className='flex-row items-center gap-x-4'>
-                    {iconRef(medicine)}
+                    {iconRef(medicine, 32)}
                     <Text className='text-2xl'>{medicine.type}</Text>
                 </View>
                 <View className='flex-row justify-between mt-4 gap-x-4'>
