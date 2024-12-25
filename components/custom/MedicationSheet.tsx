@@ -107,6 +107,6 @@ const MedicationSheet = ({ medicine }: any) => {
     );
 }
 
-const styles = StyleSheet.create({})
+// Manufacture
 
 export default MedicationSheet;
