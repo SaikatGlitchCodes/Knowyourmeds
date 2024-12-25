@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import moment from 'moment';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import calculateProgressPercentage from '~/util/calculateProgress';
 import { ScrollView } from 'react-native-gesture-handler';
 import iconRef from '~/util/MedicineIcon';
 interface MedicationSheetProps {
@@ -45,7 +43,7 @@ const MedicationSheet = ({ medicine }: any) => {
             </View>
             <View className='p-5 rounded-xl bg-primary-foreground'>
                 <View className='flex-row items-center gap-x-4'>
-                    {iconRef(medicine)}
+                    {iconRef(medicine, 32)}
                     <Text className='text-2xl'>{medicine.type}</Text>
                 </View>
                 <View className='flex-row justify-between mt-4 gap-x-4'>
@@ -107,6 +105,6 @@ const MedicationSheet = ({ medicine }: any) => {
     );
 }
 
-const styles = StyleSheet.create({})
+// Manufacture
 
 export default MedicationSheet;
