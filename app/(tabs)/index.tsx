@@ -11,6 +11,7 @@ import MedicationSheet from '~/components/custom/MedicationSheet';
 import { medicines } from '~/util/medicineList';
 import { splitSchedule } from '~/util/splitSchedule';
 
+
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [tasks, setTasks] = useState(medicines);

@@ -8,7 +8,7 @@ import TrueSheet from '~/components/custom/TrueSheet';
 import { firebaseConfig } from '../../util/firebaseConfig'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Button } from '~/components/ui/button';
-import {handlePhotoAndAnalysis} from '~/util/handlingCameraUpload'
+import {handlePhotoAndAnalysis} from '~/util/handlingCameraUpload';
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -74,7 +74,7 @@ const camera = () => {
           <View className='flex-row justify-between w-full mt-10'>
             {
               methodsToCreatePrescription.map((method, index) => (
-                <TouchableOpacity className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground' key={index} onPress={method.methods}>
+                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground'  onPress={method.methods}>
                   {method.logo}
                   <Text className='text-foreground'>{method.name}</Text>
                 </TouchableOpacity>
@@ -98,7 +98,7 @@ const camera = () => {
             </DialogHeader>
             <DialogFooter className='flex-row justify-end'>
               <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false);}}>Cancel</Text></Button>
-              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(2) }}>
+              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(1) }}>
                 <Text className='text-white' >Proceed!</Text>
               </Button>
             </DialogFooter>

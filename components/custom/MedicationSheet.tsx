@@ -94,7 +94,7 @@ const MedicationSheet = ({ medicine }: any) => {
                 <View className='p-4 rounded-2xl w-[220] bg-[#3b82f6] flex-col justify-between relative'>
                     <Image source={require('~/assets/images/card_design.png')} className='absolute p-2 rounded bottom-10 -right-10 h-60 w-60' />
                     <View className='flex items-center justify-center w-12 h-12 bg-white rounded-md'>
-                        <Image source={require('~/assets/images/ai.png')} className='w-8 h-8 p-2 rounded' />
+                        <Text>AI</Text>
                     </View>
                     <View>
                         <Text className='text-xl font-bold text-white'>Possible Side effects</Text>
