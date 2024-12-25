@@ -19,6 +19,7 @@ import Feather from '@expo/vector-icons/Feather';
 const OVERSWIPE_DIST = 20;
 const NUM_ITEMS = 20;
 import AntDesign from '@expo/vector-icons/AntDesign';
+import iconRef from '~/util/MedicineIcon'
 
 function SimpleSwipable({tasks, handlePressItem }) {
   const [data, setData] = useState(tasks);
@@ -51,6 +52,8 @@ function SimpleSwipable({tasks, handlePressItem }) {
       };
     }, [item.key, itemRefs]);
 
+   
+    
     return (
       <View style={styles.itemBreak}>
         <SwipeableItem
@@ -85,14 +88,13 @@ function SimpleSwipable({tasks, handlePressItem }) {
                 <View
                   style={{ borderRadius: 15, marginRight: 8 }}
                   className="flex items-center justify-center p-4 bg-primary-foreground">
-                  <Image
-                    source={{ uri: item.image }}
-                    style={{ height: 20, width: 20 }}
-                  />
+                  {
+                    iconRef(item)
+                  }
                 </View>
                 <View>
-                  <Text className="text-xl text-foreground"> {item.name} </Text>
-                  <Text className="text-foreground"> {item.description} </Text>
+                  <Text className="text-xl font-semibold text-foreground"> {item.name} | {item.dose} </Text>
+                  <Text className="text-foreground"> {item.type} </Text>
                 </View>
               </View>
               <Text className="text-foreground">
@@ -100,8 +102,7 @@ function SimpleSwipable({tasks, handlePressItem }) {
                   name="clockcircleo"
                   size={14}
                   color={themeText.text}
-                />{' '}
-                {item.time}{' '}
+                />{' '}{item.timeRange}{' '}
               </Text>
             </View>
           </TouchableOpacity>

@@ -20,7 +20,7 @@ const TrueSheet = forwardRef(({ children, snapPoint, handleSheetChanges }: TrueS
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   // Snap points for BottomSheet
-  const snapPoints = useMemo(() => snapPoint || ['50%', '100%'], []);
+  const snapPoints = snapPoint || ['50%', '100%'];
 
   // Handle methods exposed to parent
   useImperativeHandle(ref, () => ({
@@ -46,12 +46,13 @@ const TrueSheet = forwardRef(({ children, snapPoint, handleSheetChanges }: TrueS
       snapPoints={snapPoints}
       index={-1}
       enablePanDownToClose={true}
+      enableContentPanningGesture={true}
       backdropComponent={renderBackDrop}
       onChange={handleSheetChanges}
       handleIndicatorStyle={{ backgroundColor: theme.icon }}
       backgroundStyle={{ backgroundColor: theme.truesheet }}
     >
-      <BottomSheetView className="items-center flex-1 p-9">{children}</BottomSheetView>
+      <BottomSheetView className="items-center flex-1 p-6">{children}</BottomSheetView>
     </BottomSheet>
   );
 });

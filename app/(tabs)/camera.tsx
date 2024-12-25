@@ -44,6 +44,7 @@ const camera = () => {
   const scanNFC = () => {
     console.log("Scan NFC")
   }
+  
   const methodsToCreatePrescription = [
     {
       logo: <MaterialCommunityIcons name="nfc" size={50} color="#3b82f6" />,
@@ -103,7 +104,6 @@ const camera = () => {
   ]
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('Sheet changed to index:', index);
     if (index === -1) {
       setIsOpen(true);
     }
@@ -121,14 +121,13 @@ const camera = () => {
           <View className='flex-row justify-between w-full mt-10'>
             {
               methodsToCreatePrescription.map((method, index) => (
-                <TouchableOpacity className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground' key={index} onPress={method.methods}>
+                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground'  onPress={method.methods}>
                   {method.logo}
                   <Text className='text-foreground'>{method.name}</Text>
                 </TouchableOpacity>
               ))
             }
           </View>
-
         </View>
         <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
           <View>
