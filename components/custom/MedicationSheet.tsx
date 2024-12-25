@@ -4,7 +4,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import moment from 'moment';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import calculateProgressPercentage from '~/util/calculateProgress';
+import iconRef from '~/util/MedicineIcon';
 import { ScrollView } from 'react-native-gesture-handler';
 interface MedicationSheetProps {
     medicine: {
@@ -17,7 +17,6 @@ interface MedicationSheetProps {
 }
 
 const MedicationSheet = ({ medicine }: any) => {
-    console.log(medicine.progressPercentage)
     return (
         <View className='w-full gap-y-5'>
             <View>
@@ -92,7 +91,7 @@ const MedicationSheet = ({ medicine }: any) => {
                     </View>
                 </View>
                 <View className='p-4 rounded-2xl w-[220] bg-[#3b82f6] flex-col justify-between relative'>
-                    <Image source={require('~/assets/images/card_design.png')} className='absolute p-2 rounded bottom-10 -right-10 h-60 w-60' />
+                    {iconRef(medicine)}
                     <View className='flex items-center justify-center w-12 h-12 bg-white rounded-md'>
                         <Text>AI</Text>
                     </View>

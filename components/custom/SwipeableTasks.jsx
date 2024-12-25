@@ -89,7 +89,7 @@ function SimpleSwipable({tasks, handlePressItem }) {
                   style={{ borderRadius: 15, marginRight: 8 }}
                   className="flex items-center justify-center p-4 bg-primary-foreground">
                   {
-                    iconRef(item, themeText.logo)
+                    iconRef(item)
                   }
                 </View>
                 <View>
