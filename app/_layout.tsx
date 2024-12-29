@@ -5,14 +5,13 @@ import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Platform, View, Text} from 'react-native';
+import { Platform, View, Text, FlatListComponent } from 'react-native';
 import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import FloatLoader from '~/components/custom/FloatLoader';
-import { Button } from '~/components/ui/button';
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -24,11 +23,9 @@ const DARK_THEME: Theme = {
 };
 
 export {
-  // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-// Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -39,7 +36,6 @@ export default function RootLayout() {
     (async () => {
       const theme = await AsyncStorage.getItem('theme');
       if (Platform.OS === 'web') {
-        // Adds the background color to the html element to prevent white background on overscroll.
         document.documentElement.classList.add('bg-background');
       }
       if (!theme) {
@@ -71,7 +67,6 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <View className='relative flex-1'>
-          
           <Stack initialRouteName='(tabs)'>
             <Stack.Screen name='(auth)/welcome' options={{
               headerShown: false,
@@ -79,12 +74,18 @@ export default function RootLayout() {
             <Stack.Screen name='(tabs)' options={{
               headerShown: false,
             }} />
+            <Stack.Screen name='add-meds' options={{
+              headerShown: false,
+              title: 'Add Medicine',
+            }} />
+            <Stack.Screen name='/side-effect' options={{
+              headerShown: true,
+            }} />
             <Stack.Screen name='+not-found' options={{
               headerShown: false,
             }} />
           </Stack>
-          <Button className='bg-red-500 bg-red'><Text>Click</Text></Button>
-          <FloatLoader />
+          {/* <FloatLoader/> */}
         </View>
         <PortalHost />
       </ThemeProvider>

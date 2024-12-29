@@ -3,68 +3,76 @@ import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
+// Main method orchestrating the process
 export const handlePhotoAndAnalysis = async () => {
   try {
     // Step 1: Take photo
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [9, 16],
-      quality: 1,
-    });
-
-    if (result.canceled || !result.assets.length) {
-      throw new Error('Photo capture cancelled');
-    }
-
-    const { uri } = result.assets[0];
+    const photoUri = await capturePhoto();
 
     // Step 2: Upload to Firebase
-    const newUuid = Crypto.randomUUID();
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    
-    const storage = getStorage();
-    const storageRef = ref(storage, newUuid);
-    
-    // Create promise for upload
-    const uploadPromise = new Promise((resolve, reject) => {
-      const uploadTask = uploadBytesResumable(storageRef, blob);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload progress: ' + progress + '%');
-        },
-        reject,
-        resolve
-      );
-    });
+    const uploadId = await uploadPhotoToFirebase(photoUri);
 
-    await uploadPromise;
+    // Step 3: Convert photo to base64
+    const base64Image = await getImageBase64(photoUri);
 
-    // Step 3 & 4: Convert to base64 and analyze
-    const base64Image = await getImageBase64(uri);
-    const analysisResponse = await axios.post('http://192.168.6.99:3000/generate', {
-      imageBase64: base64Image,
-    });
-    console.log('')
+    // Step 4: Analyze photo
+    const analysisResult = await analyzeImage(base64Image);
+
     return {
       success: true,
-      photoUri: uri,
-      uploadId: newUuid,
-      analysisResult: analysisResponse.data.response
+      photoUri,
+      uploadId,
+      analysisResult,
     };
-
   } catch (error) {
     console.error('Error in photo process:', error);
     return {
       success: false,
-      error: error.message
+      error: error.message,
     };
   }
 };
 
+// Helper function to capture a photo
+export const capturePhoto = async () => {
+  const result = await ImagePicker.launchCameraAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [9, 16],
+    quality: 1,
+  });
+
+  if (result.canceled || !result.assets.length) {
+    throw new Error('Photo capture cancelled');
+  }
+
+  return result.assets[0].uri;
+};
+
+// Helper function to upload photo to Firebase
+export const uploadPhotoToFirebase = async (uri) => {
+  const newUuid = Crypto.randomUUID();
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  const storage = getStorage();
+  const storageRef = ref(storage, newUuid);
+
+  return new Promise((resolve, reject) => {
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload progress: ' + progress + '%');
+      },
+      reject,
+      () => resolve(newUuid) // Resolve with the upload ID
+    );
+  });
+};
+
+// Helper function to convert image to base64
 const getImageBase64 = async (uri) => {
   const response = await fetch(uri);
   const blob = await response.blob();
@@ -74,4 +82,12 @@ const getImageBase64 = async (uri) => {
     reader.onloadend = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
   });
+};
+
+// Helper function to analyze image via API
+const analyzeImage = async (base64Image) => {
+  const response = await axios.post('http://192.168.6.99:3000/generate', {
+    imageBase64: base64Image,
+  });
+  return response.data.response;
 };

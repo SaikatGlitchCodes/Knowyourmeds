@@ -52,7 +52,7 @@ const TrueSheet = forwardRef(({ children, snapPoint, handleSheetChanges }: TrueS
       handleIndicatorStyle={{ backgroundColor: theme.icon }}
       backgroundStyle={{ backgroundColor: theme.truesheet }}
     >
-      <BottomSheetView className="items-center flex-1 p-6">{children}</BottomSheetView>
+      <BottomSheetView className="items-center flex-1 p-4">{children}</BottomSheetView>
     </BottomSheet>
   );
 });

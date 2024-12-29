@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Text,
   View,
   StyleSheet,
   LayoutAnimation,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import SwipeableItem, {
@@ -21,11 +20,16 @@ const NUM_ITEMS = 20;
 import AntDesign from '@expo/vector-icons/AntDesign';
 import iconRef from '~/util/MedicineIcon'
 
-function SimpleSwipable({tasks, handlePressItem }) {
-  const [data, setData] = useState(tasks);
+function SimpleSwipable({ tasks, handlePressItem }) {
+  const [data, setData] = useState([]);
   const itemRefs = useRef(new Map());
   const colorScheme = useColorScheme();
   const themeText = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
+
+  useEffect(() => {
+    setData(tasks);
+    console.log('tasks', tasks.length)
+  }, [tasks]);
 
   const renderItem = (params) => {
     const onPressDelete = () => {
@@ -52,14 +56,12 @@ function SimpleSwipable({tasks, handlePressItem }) {
       };
     }, [item.key, itemRefs]);
 
-   
-    
     return (
       <View style={styles.itemBreak}>
         <SwipeableItem
           key={item.key}
           item={item}
-          ref={swipeableRef} // Use the useRef instance
+          ref={swipeableRef}
           onChange={({ openDirection }) => {
             if (openDirection !== OpenDirection.NONE) {
               [...itemRefs.current.entries()].forEach(([key, ref]) => {
@@ -83,26 +85,25 @@ function SimpleSwipable({tasks, handlePressItem }) {
               borderRadius: 15,
             }}
             onPress={() => handlePressItem(item)}>
-            <View className="flex-row items-center justify-between w-full h-full px-5">
+            <View className="flex-row items-center justify-between w-full h-full px-5 bg-blue-50">
               <View className="flex-row items-center">
                 <View
                   style={{ borderRadius: 15, marginRight: 8 }}
                   className="flex items-center justify-center p-4 bg-primary-foreground">
                   {
-                    iconRef(item)
+                    iconRef(item.form)
                   }
                 </View>
-                <View>
-                  <Text className="text-xl font-semibold text-foreground"> {item.name} | {item.dose} </Text>
-                  <Text className="text-foreground"> {item.type} </Text>
-                </View>
+                  <Text className="text-xl font-thin text-foreground"> 
+                    {item.medicine} | {item.dose_in_mg} mg
+                  </Text>
               </View>
-              <Text className="text-foreground">
+              <Text className="flex items-center text-foreground">
                 <AntDesign
                   name="clockcircleo"
-                  size={14}
+                  size={18}
                   color={themeText.text}
-                />{' '}{item.timeRange}{' '}
+                />{' '}{item.time}{' '}
               </Text>
             </View>
           </TouchableOpacity>
@@ -147,7 +148,6 @@ function SimpleSwipable({tasks, handlePressItem }) {
 
   return (
     <View style={styles.container}>
-      <Text style={{ paddingLeft: 10 }} className='mb-4 text-2xl font-semibold text-foreground'>To Take</Text>
       <DraggableFlatList
         keyExtractor={(item) => item.id}
         data={data}
@@ -164,7 +164,7 @@ export default SimpleSwipable;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 40,
+    marginVertical: 5,
   },
   row: {
     marginHorizontal: 10,
@@ -202,6 +202,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   itemBreak: {
-    marginBottom: 10
+    marginBottom: 5
   }
 });

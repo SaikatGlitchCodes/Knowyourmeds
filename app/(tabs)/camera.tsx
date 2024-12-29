@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Dialog, DialogFooter, DialogContent, DialogHeader, DialogDescription, DialogTitle } from '~/components/ui/dialog';
-import TrueSheet from '~/components/custom/TrueSheet';
-import { firebaseConfig } from '../../util/firebaseConfig'
-import BottomSheet from '@gorhom/bottom-sheet';
-import { Button } from '~/components/ui/button';
-import {handlePhotoAndAnalysis} from '~/util/handlingCameraUpload';
+import { firebaseConfig } from '../../util/firebaseConfig';
+import { handlePhotoAndAnalysis } from '~/util/handlingCameraUpload';
+import { useRouter } from 'expo-router';
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -16,8 +13,7 @@ if (!initializeApp.apps?.length) {
 }
 
 const camera = () => {
-  const trueSheetRef = useRef<BottomSheet>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -28,21 +24,19 @@ const camera = () => {
     })();
   }, []);
 
-  const scanNFC = () => {
-    console.log("Scan NFC")
-  }
-  
   const methodsToCreatePrescription = [
     {
       logo: <MaterialCommunityIcons name="nfc" size={50} color="#3b82f6" />,
       name: 'NFC',
-      methods: scanNFC
+      methods: () => {
+        console.log("Scan NFC")
+      }
     },
     {
       logo: <MaterialCommunityIcons name="text-shadow" size={50} color="#3b82f6" />,
       name: 'Manual',
       methods: () => {
-        trueSheetRef?.current?.snapToIndex(1)
+        router.push('/add-meds')
         console.log("Manual")
       }
     },
@@ -56,12 +50,6 @@ const camera = () => {
     }
   ]
 
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === -1) {
-      setIsOpen(true);
-    }
-  }, []);
-
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
       <KeyboardAvoidingView
@@ -74,7 +62,7 @@ const camera = () => {
           <View className='flex-row justify-between w-full mt-10'>
             {
               methodsToCreatePrescription.map((method, index) => (
-                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground'  onPress={method.methods}>
+                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground' onPress={method.methods}>
                   {method.logo}
                   <Text className='text-foreground'>{method.name}</Text>
                 </TouchableOpacity>
@@ -82,28 +70,6 @@ const camera = () => {
             }
           </View>
         </View>
-        <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
-          <View>
-            <Text className="text-foreground">Hello</Text>
-          </View>
-        </TrueSheet>
-
-        <Dialog open={isOpen} >
-          <DialogContent className='sm:max-w-[425px]'>
-            <DialogHeader>
-              <DialogTitle>Save Medicine!</DialogTitle>
-              <DialogDescription>
-                Cancel medication Addtion, this action cannot be undone
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className='flex-row justify-end'>
-              <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false);}}>Cancel</Text></Button>
-              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(1) }}>
-                <Text className='text-white' >Proceed!</Text>
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </KeyboardAvoidingView >
     </SafeAreaView >
   );

@@ -14,9 +14,6 @@ export default function TabLayout() {
       initialRouteName='index'
       screenOptions={{
         tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
           default: {},
         }),
       }}>
