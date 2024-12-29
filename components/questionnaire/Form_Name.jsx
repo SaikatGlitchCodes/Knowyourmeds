@@ -7,7 +7,8 @@ import iconRef from '~/util/MedicineIcon';
 const MedicineFormItem = ({ item, isActive, onSelect }) => (
     <TouchableOpacity
         onPress={onSelect}
-        className={`flex-col items-center p-5 justify-evenly h-28 w-28 rounded-xl me-2 ${isActive ? 'bg-themeColor' : 'bg-primary-foreground'}`}
+        style={{marginEnd:15}}
+        className={`flex-col items-center p-5 justify-evenly h-28 w-28 rounded-xl ${isActive ? 'bg-themeColor' : 'bg-primary-foreground'}`}
     >
         {iconRef(item.title, 30, isActive ? 'white' : '#3b82f6')}
         <Text className={`mt-6 text-md ${isActive ? 'text-white' : 'text-themeColor'}`}>{item.title}</Text>
@@ -18,7 +19,7 @@ const FormName = ({medicineInfo,setMedicineInfo}) => {
     return (
         <View className='flex-1 gap-y-4'>
             <View>
-                <Text className="mb-5 text-3xl text-foreground">Choose Medicine Form</Text>
+                <Text style={{marginBottom:10}} className=" text-3xl text-foreground">Choose Medicine Form</Text>
                 <FlatList
                     horizontal
                     keyExtractor={(item) => item.title}
@@ -35,7 +36,7 @@ const FormName = ({medicineInfo,setMedicineInfo}) => {
                 />
             </View>
             <View>
-                <Text className="mb-5 text-3xl text-foreground">Medicine Name</Text>
+                <Text style={{marginTop:15, marginBottom:15}} className="mb-5 text-3xl text-foreground">Medicine Name</Text>
                 <Input
                     placeholder='Medicine Name'
                     value={medicineInfo.medicine}
