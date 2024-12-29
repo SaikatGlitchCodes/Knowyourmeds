@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Input } from '../ui/input';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { frequencyArray } from '~/util/splitSchedule'; // Import frequency options if needed globally
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -12,7 +13,8 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     );
     const ref = useRef(null);
     const [time, setTime] = useState('');
-    const [noOfMeds,setnoOfMeds] = useState(0);
+    const [noOfMeds, setnoOfMeds] = useState(0);
+
     const updateFrequency = (time, value) => {
         const updatedFrequency = selectedFrequency.map((item) =>
             item.time === time ? { ...item, number_of_tablets: value } : item
@@ -25,13 +27,18 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         scrollToIndex(item.index)
     }
 
+    const addTime = (item) => {
+        setTime(item.item.time);
+        scrollToIndex(item.index)
+    }
+
     const renderFrequencyItem = (item) => {
         const active = item.item.time === time;
-        return <TouchableOpacity onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor':'bg-primary-foreground'} me-3`} style={{ paddingTop: 4 }}>
-            <Text className={`text-center ${active?'text-white':'text-black'}`}>{item.item.time}</Text>
+        return <TouchableOpacity onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3`}>
+            <Text className={`${active ? 'text-white' : 'text-black'} text-center`}> {item.item.time} </Text>
         </TouchableOpacity>
-        
     };
+
     const scrollToIndex = index => {
         ref?.current?.scrollToIndex({
             animated: true,
@@ -40,6 +47,16 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         });
     }
 
+    const changePillValue = (type) => {
+        if (type === 'plus') {
+            setnoOfMeds(noOfMeds + 1)
+        }
+        else if (type === 'minus') {
+            if (noOfMeds > 0) {
+                setnoOfMeds(noOfMeds - 1)
+            }
+        }
+    }
     return (
         <View className="flex-1 gap-y-4">
             <View>
@@ -63,27 +80,29 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                 />
             </View>
             <View>
-                <Text className="mb-5 text-3xl text-foreground" style={{ marginBottom: 15, marginTop: 15 }}>Frequency</Text>
-                <FlatList
-                    horizontal
-                    data={selectedFrequency}
-                    keyExtractor={(item) => item.time}
-                    renderItem={renderFrequencyItem}
-                    showsHorizontalScrollIndicator={false}
-                    ref={ref}
-                    
-                />
+                <Text className="mb-5 text-3xl text-foreground">Schedule your meds</Text>
+                <View className='ms-4'>
+                    <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        data={selectedFrequency}
+                        keyExtractor={(item) => item.time}
+                        renderItem={renderFrequencyItem}
+                        ref={ref}
+                    />
+                </View>
                 {
-                    time && <View className="flex-row items-center m-auto mt-4">
-                        <TouchableOpacity className='p-3 bg-primary-foreground rounded-lg' onPress={()=>changePillValue}>
-                            <AntDesign name="minus" size={24} color="#3b82f6" />
+                    time && <View className='flex-row items-center m-auto mt-4'>
+                        <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
+                            () => changePillValue('minus')}>
+                            <AntDesign name="minus" size={20} color="#3b82f6" />
                         </TouchableOpacity>
                         <Text className='mx-4 text-3xl'>{noOfMeds}</Text>
-                        <TouchableOpacity className='p-3 bg-primary-foreground rounded-lg'>
-                            <AntDesign name="plus" size={24} color="#3b82f6" onPress={changePillValue}/>
+                        <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
+                            () => changePillValue('plus')}>
+                            <AntDesign name="plus" size={20} color="#3b82f6" />
                         </TouchableOpacity>
                     </View>
-
                 }
             </View>
         </View>

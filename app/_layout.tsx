@@ -67,7 +67,7 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
         <View className='relative flex-1'>
-          <Stack initialRouteName='(tabs)'>
+          <Stack initialRouteName='add-meds'>
             <Stack.Screen name='(auth)/welcome' options={{
               headerShown: false,
             }} />
