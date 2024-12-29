@@ -72,13 +72,13 @@ const camera = () => {
             setJsonData(result.datatoPrint); // Update state with the JSON object
             
             trueSheetRef?.current?.snapToIndex(1); // Open TrueSheet
-            const frequency = result.datatoPrint.frequency;
-            if (frequency) {
-              const times = Object.entries(frequency)
-                .filter(([_, value]) => value.number_of_tablets > 0)
-                .map(([time, value]) => `${time}: ${value.number_of_tablets} tablet(s)`);
-              setTimesWithPills(times);
-            }
+            // const frequency = result.datatoPrint.frequency;
+            // if (frequency) {
+            //   const times = Object.entries(frequency)
+            //     .filter(([_, value]) => value.number_of_tablets > 0)
+            //     .map(([time, value]) => `${time}: ${value.number_of_tablets} tablet(s)`);
+            //   setTimesWithPills(times);
+            // }
 
             // setPatientname(jsonData.patientname);
             // setMedicine(jsonData.medicine);
@@ -142,7 +142,7 @@ const camera = () => {
             {/* <Text className='text-foreground text-xl'>Dangerous or Controlled Substance: {jsonData.dangerousOrControlledSubstance}</Text> */}
             {/* <Text className='text-foreground'>Frequency: {frequency}</Text> */}
             <Text className='text-foreground text-xl'>Special Instructions: {jsonData.special_instructions}</Text>
-            {timesWithPills.length > 0 ? (
+            {/* {timesWithPills.length > 0 ? (
               timesWithPills.map((time, index) => (
                 <Text key={index} className='text-foreground text-xl'>
                   Schedule: {time}
@@ -150,7 +150,7 @@ const camera = () => {
               ))
             ) : (
               <Text className='text-foreground'>No pills to take.</Text>
-            )}
+            )} */}
 
           </View>
         </TrueSheet>
