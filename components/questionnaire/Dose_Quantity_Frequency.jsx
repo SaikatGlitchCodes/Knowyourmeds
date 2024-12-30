@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Input } from '../ui/input';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { frequencyArray } from '~/util/splitSchedule'; // Import frequency options if needed globally
-import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     const [selectedFrequency, setSelectedFrequency] = useState(
@@ -27,10 +27,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         scrollToIndex(item.index)
     }
 
-    const addTime = (item) => {
-        setTime(item.item.time);
-        scrollToIndex(item.index)
-    }
+    
 
     const renderFrequencyItem = (item) => {
         const active = item.item.time === time;
