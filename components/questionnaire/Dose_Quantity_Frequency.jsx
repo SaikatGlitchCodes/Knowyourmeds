@@ -11,6 +11,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
             ? medicineInfo.frequency
             : frequencyArray
     );
+
     const ref = useRef(null);
     const [time, setTime] = useState('');
     const [noOfMeds, setnoOfMeds] = useState(0);
@@ -32,7 +33,9 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     const renderFrequencyItem = (item) => {
         const active = item.item.time === time;
         return <TouchableOpacity onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3`}>
-            <Text className={`${active ? 'text-white' : 'text-black'} text-center`}> {item.item.time} </Text>
+            <Text className={`${active ? 'text-white' : 'text-black'} text-center`}>
+                {item.item.time}
+            </Text>
         </TouchableOpacity>
     };
 
@@ -46,13 +49,16 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
 
     const changePillValue = (type) => {
         if (type === 'plus') {
-            setnoOfMeds(noOfMeds + 1)
+            setnoOfMeds(noOfMeds + 1);
+            updateFrequency(time, noOfMeds + 1);
         }
         else if (type === 'minus') {
             if (noOfMeds > 0) {
                 setnoOfMeds(noOfMeds - 1)
+                updateFrequency(time, noOfMeds - 1);
             }
         }
+
     }
     return (
         <View className="flex-1 gap-y-4">
