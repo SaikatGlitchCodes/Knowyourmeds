@@ -55,4 +55,5 @@ export const medicineForm = [
     { title: 'Liquid', },
     { title: 'Powder', },
     { title: 'Lotion', },
+    { title: 'Inhaler', },
 ]
