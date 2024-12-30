@@ -42,6 +42,7 @@ const AddMeds = () => {
         frequency: [],
         special_instructions: '',
     });
+    console.log('Medicine info', medicineInfo);
     const [stepIndex, setStepIndex] = useState(0);
 
     const addMedicine = () => {
