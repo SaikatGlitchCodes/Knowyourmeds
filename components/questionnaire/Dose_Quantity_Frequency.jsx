@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Input } from '../ui/input';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -13,9 +13,10 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     );
 
     const ref = useRef(null);
-    const [time, setTime] = useState('');
-    const [noOfMeds, setnoOfMeds] = useState(0);
 
+  
+    const [timeIndex, setTimeIndex] = useState(null)
+    const new_freq = [...selectedFrequency]
     const updateFrequency = (time, value) => {
         const updatedFrequency = selectedFrequency.map((item) =>
             item.time === time ? { ...item, number_of_tablets: value } : item
@@ -24,15 +25,17 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         setMedicineInfo((prev) => ({ ...prev, frequency: updatedFrequency }));
     };
     const addTime = (item) => {
-        setTime(item.item.time);
-        scrollToIndex(item.index)
+        
+        scrollToIndex(item.index);
+        setTimeIndex(item.index);
+       
     }
 
-    
-
+ 
     const renderFrequencyItem = (item) => {
-        const active = item.item.time === time;
-        return <TouchableOpacity onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3`}>
+        const active = item.index === timeIndex
+        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6' : 'white';
+        return <TouchableOpacity style={{borderColor:addedTime, borderWidth:2}} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
             <Text className={`${active ? 'text-white' : 'text-black'} text-center`}>
                 {item.item.time}
             </Text>
@@ -49,13 +52,14 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
 
     const changePillValue = (type) => {
         if (type === 'plus') {
-            setnoOfMeds(noOfMeds + 1);
-            updateFrequency(time, noOfMeds + 1);
+            
+            new_freq[timeIndex].number_of_tablets +=1
+            setSelectedFrequency(new_freq)
         }
         else if (type === 'minus') {
-            if (noOfMeds > 0) {
-                setnoOfMeds(noOfMeds - 1)
-                updateFrequency(time, noOfMeds - 1);
+            if (new_freq[timeIndex].number_of_tablets > 0) {
+            new_freq[timeIndex].number_of_tablets -=1
+            setSelectedFrequency(new_freq)
             }
         }
 
@@ -95,12 +99,12 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                     />
                 </View>
                 {
-                    time && <View className='flex-row items-center m-auto mt-4'>
+                    String(timeIndex) && <View className='flex-row items-center m-auto mt-4'>
                         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
                             () => changePillValue('minus')}>
                             <AntDesign name="minus" size={20} color="#3b82f6" />
                         </TouchableOpacity>
-                        <Text className='mx-4 text-3xl'>{noOfMeds}</Text>
+                        <Text className='mx-4 text-3xl'>{selectedFrequency[timeIndex]?.number_of_tablets}</Text>
                         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
                             () => changePillValue('plus')}>
                             <AntDesign name="plus" size={20} color="#3b82f6" />

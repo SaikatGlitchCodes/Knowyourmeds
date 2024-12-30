@@ -1,12 +1,12 @@
 import {Calendar} from 'react-native-calendars';
 import {useState} from 'react';
 
-const CalendarRange = () => {
+const TreatmentPeriodRefills = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [markedDates, setMarkedDates] = useState({});
 
-  const handleDayPress = (day:any) => {
+  const handleDayPress = (day) => {
     if (!startDate || (startDate && endDate)) {
       // First click or reset
       setStartDate(day.dateString);
@@ -14,7 +14,7 @@ const CalendarRange = () => {
       setMarkedDates({
         [day.dateString]: {
           startingDay: true,
-          color: '#50cebb'
+          color: '#3b82f6'
         }
       });
     } else {
@@ -27,7 +27,7 @@ const CalendarRange = () => {
         setEndDate(day.dateString);
       }
 
-      let range: { [key: string]: { color: string; startingDay: boolean; endingDay: boolean } } = {};
+      let range = {};
       // Generate dates between start and end
       let currentDate = new Date(startDate);
       const endDateObj = new Date(day.dateString);
@@ -36,7 +36,7 @@ const CalendarRange = () => {
         const dateString = currentDate.toISOString().split('T')[0];
         
         range[dateString] = {
-          color: '#50cebb',
+          color: '#3b82f6',
           startingDay: dateString === startDate,
           endingDay: dateString === day.dateString
         };
@@ -53,8 +53,11 @@ const CalendarRange = () => {
       markingType={'period'}
       onDayPress={handleDayPress}
       markedDates={markedDates}
+      theme={{
+        
+      }}
     />
   );
 };
 
-export default CalendarRange;
+export default TreatmentPeriodRefills;

@@ -8,6 +8,8 @@ import { Progress } from '~/components/ui/progress';
 import { Button } from '~/components/ui/button';
 import FormName from '~/components/questionnaire/Form_Name';
 import DoseQuantityFrequency from '~/components/questionnaire/Dose_Quantity_Frequency'
+import { Calendar } from 'lucide-react-native';
+import TreatmentPeriodAndRefills from '~/components/questionnaire/Date_SI_Refills';
 
 interface MedicineInfo {
     medicine: string;
@@ -78,6 +80,11 @@ const AddMeds = () => {
             key: 2,
             title: 'Dose, Quantity, Frequency',
             component: <DoseQuantityFrequency medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />,
+        },
+        {
+            key:3,
+            title: "Treatment Period and Refills",
+            component: <TreatmentPeriodAndRefills />
         }
     ]
 
