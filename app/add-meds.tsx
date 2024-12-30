@@ -7,7 +7,8 @@ import { router } from 'expo-router';
 import { Progress } from '~/components/ui/progress';
 import { Button } from '~/components/ui/button';
 import FormName from '~/components/questionnaire/Form_Name';
-import DoseQuantityFrequency from '~/components/questionnaire/Dose_Quantity_Frequency'
+import DoseQuantityFrequency from '~/components/questionnaire/Dose_Quantity_Frequency';
+import TreatmentPeriodRefills from '~/components/questionnaire/TreatmentPeriod';
 
 interface MedicineInfo {
     medicine: string;
@@ -78,12 +79,17 @@ const AddMeds = () => {
             key: 2,
             title: 'Dose, Quantity, Frequency',
             component: <DoseQuantityFrequency medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />,
+        },
+        {
+            key: 3,
+            title: 'Treatment Period & Refills',
+            component: <TreatmentPeriodRefills/>
         }
     ]
 
     const nextStep = () => {
         if (stepIndex === addMedSteps.length - 1) {
-            addMedicine();
+            // addMedicine();
             return;
         }  // TODO: Add validation and save to store here
         if (stepIndex < addMedSteps.length - 1) {

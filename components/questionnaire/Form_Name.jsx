@@ -19,10 +19,9 @@ const FormName = ({ medicineInfo, setMedicineInfo }) => {
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'space-between' }}>
             <View className='flex-1 gap-y-4'>
-                <View className="mt-10">
-                    <Text className="mb-5 text-3xl text-foreground" >Medicine Name</Text>
+                <View >
+                    <Text style={{marginBottom: 10}} className="text-3xl text-foreground" >Medicine Name</Text>
                     <Input
-                        className="mt-5"
                         placeholder='Medicine Name'
                         value={medicineInfo.medicine}
                         onChangeText={text => setMedicineInfo({ ...medicineInfo, medicine: text })}
@@ -30,7 +29,7 @@ const FormName = ({ medicineInfo, setMedicineInfo }) => {
                         aria-errormessage='inputError'
                     />
                 </View>
-                <View className="mt-10">
+                <View className="mt-3">
                     <Text style={{ marginBottom: 15 }} className="text-3xl text-foreground">Choose Medicine Form</Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', height: '300', alignSelf: 'baseline', justifyContent: 'center', gap: 15 }} >
                         {
