@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Input } from '../ui/input';
 import { medicineForm } from '~/util/splitSchedule';
 import iconRef from '~/util/MedicineIcon';
@@ -17,34 +17,38 @@ const MedicineFormItem = ({ item, isActive, onSelect }) => (
 
 const FormName = ({ medicineInfo, setMedicineInfo }) => {
     return (
-        <View className='flex-1 gap-y-4'>
-            <View>
-                <Text style={{ marginBottom: 15 }} className="text-3xl text-foreground">Choose Medicine Form</Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', height:'300', alignSelf: 'baseline', justifyContent:'center', gap: 15 }} >
-                    {
-                        medicineForm.map((item, index) => (
-                            <MedicineFormItem
-                                key={index}
-                                item={item}
-                                isActive={medicineInfo.form === item.title}
-                                onSelect={() => setMedicineInfo((prev) => ({ ...prev, form: item.title }))}
-                            />
-                        ))
-                    }
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View className='flex-1 gap-y-4'>
+                <View className="mt-10">
+                    <Text className="mb-5 text-3xl text-foreground" >Medicine Name</Text>
+                    <Input
+                        className="mt-5"
+                        placeholder='Medicine Name'
+                        value={medicineInfo.medicine}
+                        onChangeText={text => setMedicineInfo({ ...medicineInfo, medicine: text })}
+                        aria-labelledby='inputLabel'
+                        aria-errormessage='inputError'
+                    />
                 </View>
-            </View>
-            <View>
-                <Text className="mb-5 text-3xl text-foreground">Medicine Name</Text>
-                <Input
-                    placeholder='Medicine Name'
-                    value={medicineInfo.medicine}
-                    onChangeText={text => setMedicineInfo({ ...medicineInfo, medicine: text })}
-                    aria-labelledby='inputLabel'
-                    aria-errormessage='inputError'
-                />
-            </View>
+                <View className="mt-10">
+                    <Text style={{ marginBottom: 15 }} className="text-3xl text-foreground">Choose Medicine Form</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', height: '300', alignSelf: 'baseline', justifyContent: 'center', gap: 15 }} >
+                        {
+                            medicineForm.map((item, index) => (
+                                <MedicineFormItem
+                                    key={index}
+                                    item={item}
+                                    isActive={medicineInfo.form === item.title}
+                                    onSelect={() => setMedicineInfo((prev) => ({ ...prev, form: item.title }))}
+                                />
+                            ))
+                        }
+                    </View>
+                </View>
 
-        </View>
+
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
