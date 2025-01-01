@@ -14,8 +14,7 @@ const TreatmentPeriodRefills = () => {
       setMarkedDates({
         [day.dateString]: {
           startingDay: true,
-          color: '#3b82f6',
-          textColor: 'white'
+          color: '#3b82f6'
         }
       });
     } else {
@@ -36,7 +35,6 @@ const TreatmentPeriodRefills = () => {
         
         range[dateString] = {
           color: '#3b82f6',
-          textColor: 'white',
           startingDay: dateString === startDate,
           endingDay: dateString === day.dateString
         };
@@ -53,6 +51,16 @@ const TreatmentPeriodRefills = () => {
       markingType={'period'}
       onDayPress={handleDayPress}
       markedDates={markedDates}
+      theme={{
+        backgroundColor: '#0a8cf7',
+        calendarBackground: '#ffffff',
+        textSectionTitleColor: '#b6c1cd',
+        selectedDayBackgroundColor: '#00adf5',
+        selectedDayTextColor: '#0a8cf7',
+        todayTextColor: '#00adf5',
+        dayTextColor: '#2d4150',
+        textDisabledColor: '#dd99ee'
+      }}
     />
   );
 };
