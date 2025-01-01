@@ -56,7 +56,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     return (
         <View className="flex-1 gap-y-4">
             <View>
-                <Text style={{ marginBottom: 10 }} className="mb-5 text-3xl text-foreground">Dose (in mg)</Text>
+                <Text style={{ marginBottom: 10 }} className="mb-5 text-2xl text-foreground">Dose (in mg)</Text>
                 <Input
                     placeholder="Enter Dose"
                     value={medicineInfo.dose_in_mg}
@@ -66,7 +66,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                 />
             </View>
             <View>
-                <Text className="mb-5 text-3xl text-foreground" style={{ marginBottom: 15, marginTop: 15 }}>Quantity</Text>
+                <Text className="mb-5 text-2xl text-foreground" style={{ marginBottom: 15, marginTop: 15 }}>Quantity</Text>
                 <Input
                     placeholder="Enter Quantity"
                     value={medicineInfo.quantity}
@@ -76,7 +76,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                 />
             </View>
             <View>
-                <Text className="my-5 text-3xl text-foreground">Schedule your meds</Text>
+                <Text className="my-5 text-2xl text-foreground">Schedule your meds</Text>
                 <View>
                     <FlatList
                         showsHorizontalScrollIndicator={false}
@@ -93,7 +93,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                             () => changePillValue('minus')}>
                             <AntDesign name="minus" size={20} color="#3b82f6" />
                         </TouchableOpacity>
-                        <Text className='mx-4 text-3xl'>{selectedFrequency[timeIndex]?.number_of_tablets}</Text>
+                        <Text className='mx-4 text-3xl text-foreground'>{selectedFrequency[timeIndex]?.number_of_tablets}</Text>
                         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
                             () => changePillValue('plus')}>
                             <AntDesign name="plus" size={20} color="#3b82f6" />

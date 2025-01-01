@@ -96,7 +96,7 @@ const TreatmentPeriodRefills = () => {
           () => changeRefillValue('minus')}>
           <AntDesign name="minus" size={20} color="#3b82f6" />
         </TouchableOpacity>
-        <Text className='mx-4 text-3xl'>{refills}</Text>
+        <Text className='mx-4 text-3xl text-foreground'>{refills}</Text>
         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
           () => changeRefillValue('plus')}>
           <AntDesign name="plus" size={20} color="#3b82f6" />

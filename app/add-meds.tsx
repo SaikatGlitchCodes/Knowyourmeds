@@ -116,7 +116,7 @@ const AddMeds = () => {
                             <Progress value={50} className="w-[60%] h-3" />
                             <Text className="text-xl text-foreground">Skip</Text>
                         </View>
-                        <ScrollView className="flex-1">
+                        <ScrollView style={{marginBottom: 10}} className="flex-1">
                         {addMedSteps[stepIndex].component}
                         </ScrollView>
                     </View>
