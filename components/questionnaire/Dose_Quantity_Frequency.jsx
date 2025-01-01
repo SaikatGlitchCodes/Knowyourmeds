@@ -88,7 +88,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                     />
                 </View>
                 {
-                    String(timeIndex) && <View className='flex-row items-center m-auto mt-4'>
+                    timeIndex!=null && <View className='flex-row items-center m-auto mt-4'>
                         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
                             () => changePillValue('minus')}>
                             <AntDesign name="minus" size={20} color="#3b82f6" />

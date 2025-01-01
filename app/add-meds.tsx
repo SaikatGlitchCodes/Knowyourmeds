@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, View, Text, Platform, KeyboardAvoidingView } from 'react-native';
+import { TouchableOpacity, View, Text, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMedicineStore } from '~/storage/medicineStore';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -108,6 +108,7 @@ const AddMeds = () => {
     return (
         <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20 }}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'space-between' }}>
+                <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
                 <View className="flex-row items-center justify-between mb-8">
                     <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-slate-100" onPress={goBack}>
                         <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
@@ -118,6 +119,7 @@ const AddMeds = () => {
                 {addMedSteps[stepIndex].component}
                 <Button className='bg-themeColor' onPress={nextStep}><Text className='text-xl text-white'>{stepIndex === addMedSteps.length-1?'Save':'Next'}</Text>
                 </Button>
+                </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
