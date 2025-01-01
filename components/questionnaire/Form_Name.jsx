@@ -17,8 +17,7 @@ const MedicineFormItem = ({ item, isActive, onSelect }) => (
 
 const FormName = ({ medicineInfo, setMedicineInfo }) => {
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'space-between' }}>
-            <View className='flex-1 gap-y-4'>
+            <View className='flex-1 mb-10 gap-y-4'>
                 <View >
                     <Text style={{marginBottom: 10}} className="text-3xl text-foreground" >Medicine Name</Text>
                     <Input
@@ -47,7 +46,6 @@ const FormName = ({ medicineInfo, setMedicineInfo }) => {
 
 
             </View>
-        </KeyboardAvoidingView>
     );
 }
 

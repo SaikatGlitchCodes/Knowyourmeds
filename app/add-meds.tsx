@@ -83,7 +83,7 @@ const AddMeds = () => {
         {
             key: 3,
             title: 'Treatment Period & Refills',
-            component: <TreatmentPeriodRefills/>
+            component: <TreatmentPeriodRefills />
         }
     ]
 
@@ -106,20 +106,22 @@ const AddMeds = () => {
         return;
     }
     return (
-        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20 }}>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, justifyContent: 'space-between' }}>
-                <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
-                <View className="flex-row items-center justify-between mb-8">
-                    <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-slate-100" onPress={goBack}>
-                        <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
-                    </TouchableOpacity>
-                    <Progress value={50} className="w-[60%] h-3" />
-                    <Text className="text-xl text-foreground">Skip</Text>
-                </View>
-                {addMedSteps[stepIndex].component}
-                <Button className='bg-themeColor' onPress={nextStep}><Text className='text-xl text-white'>{stepIndex === addMedSteps.length-1?'Save':'Next'}</Text>
-                </Button>
-                </ScrollView>
+        <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20, flex:1 }}>
+            <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
+                    <View className="justify-between flex-1">
+                        <View className="flex-row items-center justify-between mb-8">
+                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-slate-100" onPress={goBack}>
+                                <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
+                            </TouchableOpacity>
+                            <Progress value={50} className="w-[60%] h-3" />
+                            <Text className="text-xl text-foreground">Skip</Text>
+                        </View>
+                        <ScrollView className="flex-1">
+                        {addMedSteps[stepIndex].component}
+                        </ScrollView>
+                    </View>
+                    <Button className='mb-1 bg-themeColor' onPress={nextStep}><Text className='text-xl text-white'>{stepIndex === addMedSteps.length - 1 ? 'Save' : 'Next'}</Text>
+                    </Button>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
