@@ -8,7 +8,7 @@ const MedicineFormItem = ({ item, isActive, onSelect }) => (
     <TouchableOpacity
         onPress={onSelect}
         style={{ marginEnd: 3 }}
-        className={`flex-col items-center p-5 justify-evenly h-28 w-28 rounded-xl ${isActive ? 'bg-themeColor' : 'bg-primary-foreground'}`}
+        className={`flex-col items-center p-5 justify-between h-28 w-28 rounded-xl ${isActive ? 'bg-themeColor' : 'bg-primary-foreground'}`}
     >
         {iconRef(item.title, 30, isActive ? 'white' : '#3b82f6')}
         <Text className={`mt-6 text-md ${isActive ? 'text-white' : 'text-themeColor'}`}>{item.title}</Text>
