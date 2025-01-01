@@ -13,29 +13,18 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     );
 
     const ref = useRef(null);
-
-  
-    const [timeIndex, setTimeIndex] = useState(null)
-    const new_freq = [...selectedFrequency]
-    const updateFrequency = (time, value) => {
-        const updatedFrequency = selectedFrequency.map((item) =>
-            item.time === time ? { ...item, number_of_tablets: value } : item
-        );
-        setSelectedFrequency(updatedFrequency);
-        setMedicineInfo((prev) => ({ ...prev, frequency: updatedFrequency }));
-    };
+    const [timeIndex, setTimeIndex] = useState(null);
+    
     const addTime = (item) => {
-        
-        scrollToIndex(item.index);
         setTimeIndex(item.index);
-       
+        scrollToIndex(item.index)
     }
+    
 
- 
     const renderFrequencyItem = (item) => {
-        const active = item.index === timeIndex
-        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6' : 'white';
-        return <TouchableOpacity style={{borderColor:addedTime, borderWidth:2}} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
+        const active = item.index === timeIndex;
+        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6':'white';
+        return <TouchableOpacity style={{borderColor: addedTime, borderWidth: 2}} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
             <Text className={`${active ? 'text-white' : 'text-black'} text-center`}>
                 {item.item.time}
             </Text>
@@ -51,15 +40,15 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     }
 
     const changePillValue = (type) => {
+        const new_freq= [...selectedFrequency];
         if (type === 'plus') {
-            
-            new_freq[timeIndex].number_of_tablets +=1
+            new_freq[timeIndex].number_of_tablets +=1;
             setSelectedFrequency(new_freq)
         }
         else if (type === 'minus') {
             if (new_freq[timeIndex].number_of_tablets > 0) {
-            new_freq[timeIndex].number_of_tablets -=1
-            setSelectedFrequency(new_freq)
+                new_freq[timeIndex].number_of_tablets -=1;
+                setSelectedFrequency(new_freq)
             }
         }
 
@@ -87,8 +76,8 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                 />
             </View>
             <View>
-                <Text className="mb-5 text-3xl text-foreground">Schedule your meds</Text>
-                <View className='ms-4'>
+                <Text className="my-5 text-3xl text-foreground">Schedule your meds</Text>
+                <View>
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal
