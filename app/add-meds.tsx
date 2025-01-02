@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, View, Text, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { NAV_THEME } from '~/lib/constants';
+import { TouchableOpacity, View, Text, Platform, KeyboardAvoidingView, ScrollView, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMedicineStore } from '~/storage/medicineStore';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -28,6 +29,7 @@ interface MedicineInfo {
 
 
 const AddMeds = () => {
+    const colorScheme = useColorScheme();
     const [medicineInfo, setMedicineInfo] = useState<MedicineInfo>({
         medicine: '',
         uses_of_the_medicine: '',
@@ -105,13 +107,14 @@ const AddMeds = () => {
         router.back();
         return;
     }
+    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
     return (
         <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20, flex:1 }}>
             <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     <View className="justify-between flex-1">
                         <View className="flex-row items-center justify-between mb-8">
-                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-slate-100" onPress={goBack}>
-                                <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
+                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-primary-foreground" onPress={goBack}>
+                                <MaterialIcons name="arrow-back-ios-new" size={20} color={themeColor.primary} />
                             </TouchableOpacity>
                             <Progress value={50} className="w-[60%] h-3" />
                             <Text className="text-xl text-foreground">Skip</Text>

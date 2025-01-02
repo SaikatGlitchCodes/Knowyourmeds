@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, useColorScheme } from 'react-native';
 import { Input } from '../ui/input';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { frequencyArray } from '~/util/splitSchedule'; // Import frequency options if needed globally
-
+import { NAV_THEME } from '~/lib/constants';
 
 const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
+    const colorScheme = useColorScheme();
+    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
     const [selectedFrequency, setSelectedFrequency] = useState(
         medicineInfo.frequency.length > 0
             ? medicineInfo.frequency
@@ -14,18 +16,18 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
 
     const ref = useRef(null);
     const [timeIndex, setTimeIndex] = useState(null);
-    
+
     const addTime = (item) => {
         setTimeIndex(item.index);
         scrollToIndex(item.index)
     }
-    
+
 
     const renderFrequencyItem = (item) => {
         const active = item.index === timeIndex;
-        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6':'white';
-        return <TouchableOpacity style={{borderColor: addedTime, borderWidth: 2}} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
-            <Text className={`${active ? 'text-white' : 'text-black'} text-center`}>
+        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6' : 'transparent';
+        return <TouchableOpacity style={{ borderColor: addedTime, borderWidth: 2 }} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
+            <Text className={`${active ? 'text-white' : 'text-foreground'} text-center`}>
                 {item.item.time}
             </Text>
         </TouchableOpacity>
@@ -40,14 +42,14 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     }
 
     const changePillValue = (type) => {
-        const new_freq= [...selectedFrequency];
+        const new_freq = [...selectedFrequency];
         if (type === 'plus') {
-            new_freq[timeIndex].number_of_tablets +=1;
+            new_freq[timeIndex].number_of_tablets += 1;
             setSelectedFrequency(new_freq)
         }
         else if (type === 'minus') {
             if (new_freq[timeIndex].number_of_tablets > 0) {
-                new_freq[timeIndex].number_of_tablets -=1;
+                new_freq[timeIndex].number_of_tablets -= 1;
                 setSelectedFrequency(new_freq)
             }
         }
@@ -88,7 +90,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
                     />
                 </View>
                 {
-                    timeIndex!=null && <View className='flex-row items-center m-auto mt-4'>
+                    timeIndex != null && <View className='flex-row items-center m-auto mt-4'>
                         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
                             () => changePillValue('minus')}>
                             <AntDesign name="minus" size={20} color="#3b82f6" />
