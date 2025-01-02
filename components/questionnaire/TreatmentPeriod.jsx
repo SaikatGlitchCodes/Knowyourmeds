@@ -7,17 +7,22 @@ import { Text } from 'react-native';
 import { Textarea } from '../ui/textarea';
 import moment from 'moment';
 
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const [month, day, year] = dateString.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+};
 
 const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
-  const defaultStart = '2025-01-02';
-  const defaultEnd = '2025-01-31';
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const defaultStart = formatDate(medicineInfo.treatment_start_date);
+  const defaultEnd = formatDate(medicineInfo.treatment_end_date);
+  const [startDate, setStartDate] = useState(defaultStart);
+  const [endDate, setEndDate] = useState(defaultEnd);
   const [markedDates, setMarkedDates] = useState(() => {
     // Initialize with default date range
     let range = {};
-    let currentDate = new Date(null);
-    const endDateObj = new Date(null);
+    let currentDate = new Date(defaultStart);
+    const endDateObj = new Date(defaultEnd);
 
     while (currentDate <= endDateObj) {
       const dateString = currentDate.toISOString().split('T')[0];

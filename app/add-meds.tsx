@@ -38,8 +38,8 @@ const AddMeds = () => {
         manufacturer: '',
         quantity: '',
         dangerous_or_controlled_substance: '',
-        treatment_start_date: '',
-        treatment_end_date: '',
+        treatment_start_date: '01/01/2025',
+        treatment_end_date: '01/25/2025',
         prescription_refills: '',
         side_effects: '',
         frequency: [],
@@ -59,8 +59,8 @@ const AddMeds = () => {
             manufacturer: 'Cipla',
             quantity: '30',
             dangerous_or_controlled_substance: 'no',
-            treatment_start_date: '12/12/2024',
-            treatment_end_date: '12/30/2024',
+            treatment_start_date: '2025-01-12',
+            treatment_end_date: '2025-01-18',
             prescription_refills: '0',
             side_effects: '<ul><li>Nausea</li><li>Diarrhea</li><li>Allergic reaction</li><li>Rash</li></ul>',
             frequency: [
@@ -86,7 +86,7 @@ const AddMeds = () => {
         {
             key: 3,
             title: 'Treatment Period & Refills',
-            component: <TreatmentPeriodRefills edicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />
+            component: <TreatmentPeriodRefills medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />
         }
     ]
 
