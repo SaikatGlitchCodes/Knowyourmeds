@@ -5,16 +5,14 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { frequencyArray } from '~/util/splitSchedule'; // Import frequency options if needed globally
 import { NAV_THEME } from '~/lib/constants';
 
-const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
+const DoseQuantityFrequency = ({ values, errors, touched, setFieldValue }) => {
     const colorScheme = useColorScheme();
     const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
     const [selectedFrequency, setSelectedFrequency] = useState(
-        medicineInfo.frequency.length > 0
-            ? medicineInfo.frequency
+        values.frequency.length > 0
+            ? values.frequency
             : frequencyArray
     );
-
-  
 
     const ref = useRef(null);
     const [timeIndex, setTimeIndex] = useState(null);
@@ -23,7 +21,6 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         setTimeIndex(item.index);
         scrollToIndex(item.index)
     }
-
 
     const renderFrequencyItem = (item) => {
         const active = item.index === timeIndex;
@@ -48,7 +45,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         if (type === 'plus') {
             new_freq[timeIndex].number_of_tablets += 1;
             setSelectedFrequency(new_freq)
-            setMedicineInfo({ ...medicineInfo, frequency: new_freq })
+            setFieldValue('frequency', new_freq)
         }
         else if (type === 'minus') {
             if (new_freq[timeIndex].number_of_tablets > 0) {
@@ -61,24 +58,29 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     return (
         <View className="flex-1 gap-y-4">
             <View>
-                <Text style={{ marginBottom: 10 }} className="mb-5 text-2xl text-foreground">Dose (in mg)</Text>
+                <Text className="text-2xl text-foreground">Dose (in mg)</Text>
                 <Input
-                    placeholder="Enter Dose"
-                    value={medicineInfo.dose_in_mg}
-                    onChangeText={(text) =>
-                        setMedicineInfo({ ...medicineInfo, dose_in_mg: text })
-                    }
+                    value={values.dose_in_mg}
+                    onChangeText={(text) => setFieldValue('dose_in_mg', text)}
+                    error={touched.dose_in_mg && errors.dose_in_mg}
                 />
+                {touched.dose_in_mg && errors.dose_in_mg && (
+                    <Text className="text-red-500">{errors.dose_in_mg}</Text>
+                )}
             </View>
             <View>
                 <Text className="mb-5 text-2xl text-foreground" style={{ marginBottom: 15, marginTop: 15 }}>Quantity</Text>
                 <Input
                     placeholder="Enter Quantity"
-                    value={medicineInfo.quantity}
+                    value={values.quantity}
                     onChangeText={(text) =>
-                        setMedicineInfo({ ...medicineInfo, quantity: text })
+                        setFieldValue('quantity', text)
                     }
+                    error={touched.quantity && errors.quantity}
                 />
+                {touched.quantity && errors.quantity && (
+                    <Text className="text-red-500">{errors.quantity}</Text>
+                )}
             </View>
             <View>
                 <Text className="my-5 text-2xl text-foreground">Schedule your meds</Text>

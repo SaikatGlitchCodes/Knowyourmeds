@@ -13,10 +13,10 @@ const formatDate = (dateString) => {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 };
 
-const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
+const TreatmentPeriodRefills = ({ values, errors, touched, setFieldValue }) => {
 
-  const [startDate, setStartDate] = useState(formatDate(medicineInfo.treatment_start_date) || null);
-  const [endDate, setEndDate] = useState(formatDate(medicineInfo.treatment_end_date) || null);
+  const [startDate, setStartDate] = useState(formatDate(values.treatment_start_date) || null);
+  const [endDate, setEndDate] = useState(formatDate(values.treatment_end_date) || null);
   
   const [markedDates, setMarkedDates] = useState(() => {
     // Initialize with default date range
@@ -85,16 +85,17 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
   };
 
   useEffect(()=>{
-    setMedicineInfo(prev=>({...prev, treatment_start_date: startDate, treatment_end_date: endDate}))
+    setFieldValue('treatment_start_date', startDate);
+    setFieldValue('treatment_end_date', endDate);
   }, [startDate, endDate])
   
   const changeRefillValue = (type) => {
     if (type === 'plus') {
-      setMedicineInfo(prev => ({...prev, prescription_refills: prev.prescription_refills+1}));
+      setFieldValue('prescription_refills', values.prescription_refills + 1);
     }
     else if (type === 'minus') {
       if (refills > 0) {
-        setMedicineInfo(prev => ({...prev, prescription_refills: prev.prescription_refills-1}));
+        setFieldValue('prescription_refills', values.prescription_refills - 1);
       }
     }
 
@@ -118,13 +119,17 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
           textDisabledColor: '#dd99ee'
         }}
       />
+      {touched.treatment_start_date && errors.treatment_start_date && (
+        <Text className="text-red-500">{errors.treatment_start_date}</Text>
+      )}
+      
       <Text className='text-2xl text-foreground' style={{ paddingVertical: 10 }}>
         Special Instructions (optional) 
       </Text>
       
       <Textarea 
-        value={medicineInfo.special_instructions} 
-        onChangeText={value=> setMedicineInfo(prev=>({...prev, special_instructions: value}))} multiline 
+        value={values.special_instructions} 
+        onChangeText={(text) => setFieldValue('special_instructions', text)} multiline 
         numberOfLines={3} 
         placeholder='Eg. Take with warm water' />
         
@@ -134,7 +139,7 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
           () => changeRefillValue('minus')}>
           <AntDesign name="minus" size={20} color="#3b82f6" />
         </TouchableOpacity>
-        <Text className='mx-4 text-3xl text-foreground'>{medicineInfo.prescription_refills}</Text>
+        <Text className='mx-4 text-3xl text-foreground'>{values.prescription_refills}</Text>
         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
           () => changeRefillValue('plus')}>
           <AntDesign name="plus" size={20} color="#3b82f6" />

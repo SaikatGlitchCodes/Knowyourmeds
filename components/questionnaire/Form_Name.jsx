@@ -15,36 +15,39 @@ const MedicineFormItem = ({ item, isActive, onSelect }) => (
     </TouchableOpacity>
 );
 
-const FormName = ({ medicineInfo, setMedicineInfo }) => {
+const FormName = ({ values, errors, touched, handleChange, setFieldValue }) => {
     return (
             <View className='flex-1 mb-10 gap-y-4'>
                 <View >
-                    <Text style={{marginBottom: 10}} className="text-2xl text-foreground" >Medicine Name</Text>
+                    <Text className="text-2xl text-foreground" >Medicine Name</Text>
                     <Input
                         placeholder='Medicine Name'
-                        value={medicineInfo.medicine}
-                        onChangeText={text => setMedicineInfo({ ...medicineInfo, medicine: text })}
-                        aria-labelledby='inputLabel'
-                        aria-errormessage='inputError'
+                        value={values.medicine}
+                        onChangeText={handleChange('medicine')}
+                        error={touched.medicine && errors.medicine}
                     />
+                    {touched.medicine && errors.medicine && (
+                        <Text className="text-red-500">{errors.medicine}</Text>
+                    )}
                 </View>
                 <View className="mt-3">
-                    <Text style={{ marginBottom: 15 }} className="text-2xl text-foreground">Choose Medicine Form</Text>
+                    <Text className="text-2xl text-foreground">Choose Medicine Form</Text>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', height: '300', alignSelf: 'baseline', justifyContent: 'center', gap: 15 }} >
                         {
                             medicineForm.map((item, index) => (
                                 <MedicineFormItem
                                     key={index}
                                     item={item}
-                                    isActive={medicineInfo.form === item.title}
-                                    onSelect={() => setMedicineInfo((prev) => ({ ...prev, form: item.title }))}
+                                    isActive={values.form === item.title}
+                                    onSelect={() => setFieldValue('form', item.title)}
                                 />
                             ))
                         }
                     </View>
+                    {touched.form && errors.form && (
+                        <Text className="text-red-500">{errors.form}</Text>
+                    )}
                 </View>
-
-
             </View>
     );
 }

@@ -10,6 +10,8 @@ import FormName from '~/components/questionnaire/Form_Name';
 import DoseQuantityFrequency from '~/components/questionnaire/Dose_Quantity_Frequency';
 import TreatmentPeriodRefills from '~/components/questionnaire/TreatmentPeriod';
 import { NAV_THEME } from '~/lib/constants';
+import { Formik } from 'formik';
+import { medicineValidationSchema } from '~/lib/validationSchema';
 
 interface MedicineInfo {
     medicine: string;
@@ -30,7 +32,10 @@ interface MedicineInfo {
 
 const AddMeds = () => {
     const colorScheme = useColorScheme();
-    const [medicineInfo, setMedicineInfo] = useState<MedicineInfo>({
+    const [stepIndex, setStepIndex] = useState(0);
+    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
+
+    const initialValues: MedicineInfo = {
         medicine: '',
         uses_of_the_medicine: '',
         dose_in_mg: '',
@@ -44,62 +49,26 @@ const AddMeds = () => {
         side_effects: '',
         frequency: [],
         special_instructions: '',
-    });
-    console.log('Medicine info', medicineInfo);
-    const [stepIndex, setStepIndex] = useState(2);
-    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
-
-    const addMedicine = () => {
-        useMedicineStore.getState().addMedicine({
-            ...medicineInfo,
-            medicine: 'Amoxicillin',
-            uses_of_the_medicine: 'Amoxicillin is an antibiotic used to treat bacterial infections such as ear infections and pneumonia.',
-            dose_in_mg: '250',
-            form: 'Capsule',
-            manufacturer: 'Cipla',
-            quantity: '30',
-            dangerous_or_controlled_substance: 'no',
-            treatment_start_date: '2025-01-12',
-            treatment_end_date: '2025-01-18',
-            prescription_refills: '0',
-            side_effects: '<ul><li>Nausea</li><li>Diarrhea</li><li>Allergic reaction</li><li>Rash</li></ul>',
-            frequency: [
-                { time: '08:00', number_of_tablets: 1 },
-                { time: '20:00', number_of_tablets: 1 },
-            ],
-            special_instructions: 'Complete the full course as prescribed.',
-        });
-        console.log('Added Medicine', useMedicineStore.getState().medicines);
     };
 
     const addMedSteps = [
         {
             key: 1,
             title: 'Name & Form',
-            component: <FormName medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />
+            component: (formikProps:any) => <FormName {...formikProps} />
         },
         {
             key: 2,
             title: 'Dose, Quantity, Frequency',
-            component: <DoseQuantityFrequency medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />,
+            component: (formikProps:any) => <DoseQuantityFrequency {...formikProps} />,
         },
         {
             key: 3,
             title: 'Treatment Period & Refills',
-            component: <TreatmentPeriodRefills medicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />
+            component: (formikProps:any) => <TreatmentPeriodRefills {...formikProps} />
         }
     ]
 
-    const nextStep = () => {
-        if (stepIndex === addMedSteps.length - 1) {
-            // addMedicine();
-            return;
-        }  // TODO: Add validation and save to store here
-        if (stepIndex < addMedSteps.length - 1) {
-            setStepIndex(stepIndex + 1)
-        }
-
-    }
     const goBack = () => {
         if (stepIndex > 0) {
             setStepIndex(stepIndex - 1);
@@ -109,24 +78,75 @@ const AddMeds = () => {
         return;
     }
 
+    const validateCurrentStep = async (formikProps, currentStep) => {
+        const { validateForm, values, setTouched } = formikProps;
+        const errors = await validateForm(values);
+        
+        // Fields to validate per step
+        const stepValidationFields = {
+            0: ['medicine', 'form'],
+            1: ['dose_in_mg', 'quantity', 'frequency'],
+            2: ['treatment_start_date', 'treatment_end_date', 'prescription_refills']
+        };
+    
+        // Set touched for current step fields
+        const currentFields = stepValidationFields[currentStep];
+        const touchedFields = currentFields.reduce((acc, field) => ({
+            ...acc,
+            [field]: true
+        }), {});
+        setTouched(touchedFields);
+    
+        // Check if current step fields have errors
+        return !currentFields.some(field => errors[field]);
+    };
+
+    console.log('Step Index', ((stepIndex+1)/addMedSteps.length)*100);
+
     return (
         <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20, flex: 1 }}>
-            <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-                    <View className="justify-between flex-1">
-                        <View className="flex-row items-center justify-between mb-8">
-                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-primary-foreground" onPress={goBack}>
-                                <MaterialIcons name="arrow-back-ios-new" size={20} color={themeColor.icon} />
-                            </TouchableOpacity>
-                            <Progress value={50} className="w-[60%] h-3" />
-                            <Text className="text-xl text-foreground">Skip</Text>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={medicineValidationSchema}
+                onSubmit={(values) => {
+                    useMedicineStore.getState().addMedicine(values);
+                    router.back();
+                }}
+            >
+                {(formikProps) => (
+                    <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                        <View className="justify-between flex-1">
+                            <View className="flex-row items-center justify-between mb-8">
+                                <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-primary-foreground" onPress={goBack}>
+                                    <MaterialIcons name="arrow-back-ios-new" size={20} color={themeColor.icon} />
+                                </TouchableOpacity>
+                                <Progress value={((stepIndex+1)/addMedSteps.length)*100} className="w-[60%] h-3" />
+                                <Text className="text-xl text-foreground">Skip</Text>
+                            </View>
+                            <ScrollView style={{marginBottom: 10}} className="flex-1">
+                                {addMedSteps[stepIndex].component(formikProps)}
+                            </ScrollView>
                         </View>
-                        <ScrollView style={{marginBottom: 10}} className="flex-1">
-                        {addMedSteps[stepIndex].component}
-                    </ScrollView>
-                </View>
-                <Button className='mb-1 bg-themeColor' onPress={nextStep}><Text className='text-xl text-white'>{stepIndex === addMedSteps.length - 1 ? 'Save' : 'Next'}</Text>
-                </Button>
-            </KeyboardAvoidingView>
+                        <Button 
+                            className='mb-1 bg-themeColor' 
+                            onPress={async () => {
+                                if (stepIndex === addMedSteps.length - 1) {
+                                    formikProps.handleSubmit();
+                                } else {
+                                    const isValid = await validateCurrentStep(formikProps, stepIndex);
+                                    if (isValid) {
+                                        setStepIndex(stepIndex + 1);
+                                    }
+                                }
+                            }}
+                        >
+                            <Text className='text-xl text-white'>
+                                {stepIndex === addMedSteps.length - 1 ? 'Save' : 'Next'}
+                            </Text>
+                        </Button>
+                    </KeyboardAvoidingView>
+                )}
+            </Formik>
         </SafeAreaView>
     );
 };
