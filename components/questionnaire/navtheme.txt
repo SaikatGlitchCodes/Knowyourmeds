@@ -1,3 +1,4 @@
 import { NAV_THEME } from '~/lib/constants';
 const colorScheme = useColorScheme();
 const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
+

@@ -78,6 +78,10 @@ export default function RootLayout() {
               headerShown: false,
               title: 'Add Medicine',
             }} />
+            <Stack.Screen name='camera-splash' options={{
+              headerShown: false,
+              title: 'Loading Data...',
+            }} />
             <Stack.Screen name='/side-effect' options={{
               headerShown: true,
             }} />

@@ -44,7 +44,9 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
       methods: () => {
-        handlePhotoAndAnalysis();
+       
+        router.push('/camera-splash')
+        handlePhotoAndAnalysis()
         console.log("Prescription App")
       }
     }
