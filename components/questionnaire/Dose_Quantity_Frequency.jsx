@@ -13,7 +13,6 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
             ? medicineInfo.frequency
             : frequencyArray
     );
-
     const ref = useRef(null);
     const [timeIndex, setTimeIndex] = useState(null);
 
@@ -25,7 +24,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
 
     const renderFrequencyItem = (item) => {
         const active = item.index === timeIndex;
-        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6' : 'transparent';
+        const addedTime = item.item.number_of_tablets > 0 ? '#3b82f6' : themeColor.background;
         return <TouchableOpacity style={{ borderColor: addedTime, borderWidth: 2 }} onPress={() => { addTime(item) }} className={`flex items-center justify-center h-12 rounded-lg w-28 ${active ? 'bg-themeColor' : 'bg-primary-foreground'} me-3 `}>
             <Text className={`${active ? 'text-white' : 'text-foreground'} text-center`}>
                 {item.item.time}
