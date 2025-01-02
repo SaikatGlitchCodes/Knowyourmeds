@@ -13,6 +13,9 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
             ? medicineInfo.frequency
             : frequencyArray
     );
+
+  
+
     const ref = useRef(null);
     const [timeIndex, setTimeIndex] = useState(null);
 
@@ -45,6 +48,7 @@ const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
         if (type === 'plus') {
             new_freq[timeIndex].number_of_tablets += 1;
             setSelectedFrequency(new_freq)
+            setMedicineInfo({ ...medicineInfo, frequency: new_freq })
         }
         else if (type === 'minus') {
             if (new_freq[timeIndex].number_of_tablets > 0) {

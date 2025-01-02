@@ -86,7 +86,7 @@ const AddMeds = () => {
         {
             key: 3,
             title: 'Treatment Period & Refills',
-            component: <TreatmentPeriodRefills />
+            component: <TreatmentPeriodRefills edicineInfo={medicineInfo} setMedicineInfo={setMedicineInfo} />
         }
     ]
 
@@ -114,8 +114,8 @@ const AddMeds = () => {
             <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
                     <View className="justify-between flex-1">
                         <View className="flex-row items-center justify-between mb-8">
-                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-slate-100" onPress={goBack}>
-                                <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
+                            <TouchableOpacity className="flex items-center justify-center p-3 rounded-lg bg-primary-foreground" onPress={goBack}>
+                                <MaterialIcons name="arrow-back-ios-new" size={20} color={themeColor.icon} />
                             </TouchableOpacity>
                             <Progress value={50} className="w-[60%] h-3" />
                             <Text className="text-xl text-foreground">Skip</Text>

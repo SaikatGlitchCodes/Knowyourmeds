@@ -8,14 +8,35 @@ import { Textarea } from '../ui/textarea';
 import moment from 'moment';
 
 
-const TreatmentPeriodRefills = () => {
+const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
+  const defaultStart = '2025-01-02';
+  const defaultEnd = '2025-01-31';
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [markedDates, setMarkedDates] = useState({});
+  const [markedDates, setMarkedDates] = useState(() => {
+    // Initialize with default date range
+    let range = {};
+    let currentDate = new Date(null);
+    const endDateObj = new Date(null);
+
+    while (currentDate <= endDateObj) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      range[dateString] = {
+        color: '#3b82f6',
+        textColor: 'white',
+        startingDay: dateString === defaultStart,
+        endingDay: dateString === defaultEnd
+      };
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return range;
+  });
   const colorScheme = useColorScheme();
-  const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
+  const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
   const [refills, setRefills] = useState(0);
 
+  
+  
   const handleDayPress = (day) => {
     if (!startDate || (startDate && endDate)) {
       // First click or reset
@@ -37,6 +58,7 @@ const TreatmentPeriodRefills = () => {
       } else {
         setEndDate(day.dateString);
       }
+      console.log(startDate)
       let range = {};
       let currentDate = new Date(startDate);
       const endDateObj = new Date(day.dateString);
@@ -79,7 +101,7 @@ const TreatmentPeriodRefills = () => {
         markedDates={markedDates}
         theme={{
           backgroundColor: '#0a8cf7',
-          calendarBackground: themeColor.backgroundColor,
+          calendarBackground: themeColor.background,
           textSectionTitleColor: '#b6c1cd',
           selectedDayBackgroundColor: '#00adf5',
           selectedDayTextColor: '#0a8cf7',
