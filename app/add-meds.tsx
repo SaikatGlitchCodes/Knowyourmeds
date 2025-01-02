@@ -78,12 +78,12 @@ const AddMeds = () => {
         return;
     }
 
-    const validateCurrentStep = async (formikProps, currentStep) => {
+    const validateCurrentStep = async (formikProps: any, currentStep: number) => {
         const { validateForm, values, setTouched } = formikProps;
         const errors = await validateForm(values);
         
         // Fields to validate per step
-        const stepValidationFields = {
+        const stepValidationFields: { [key: number]: string[] } = {
             0: ['medicine', 'form'],
             1: ['dose_in_mg', 'quantity', 'frequency'],
             2: ['treatment_start_date', 'treatment_end_date', 'prescription_refills']

@@ -6,7 +6,9 @@ export const useMedicineStore = create(
   persist(
     (set, get) => ({
       medicines: [], // Array to store multiple medicines
+      progressStatus:{
 
+      },
       // Add a new medicine
       addMedicine: (medicine) => {
         set((state) => ({
