@@ -48,7 +48,7 @@ export const handlePhotoAndAnalysis = async () => {
 
     // Step 3 & 4: Convert to base64 and analyze
     const base64Image = await getImageBase64(uri);
-    const analysisResponse = await axios.post('http://192.168.6.99:3000/generate', {
+    const analysisResponse = await axios.post('https://medicineschedulerai.onrender.com/generate/image', {
       imageBase64: base64Image,
     });
     console.log('')

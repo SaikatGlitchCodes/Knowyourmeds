@@ -41,21 +41,19 @@ const camera = () => {
     })();
   }, []);
 
-  const scanNFC = () => {
-    console.log("Scan NFC")
-  }
-  
   const methodsToCreatePrescription = [
     {
       logo: <MaterialCommunityIcons name="nfc" size={50} color="#3b82f6" />,
       name: 'NFC',
-      methods: scanNFC
+      methods: () => {
+        console.log("Scan NFC")
+      }
     },
     {
       logo: <MaterialCommunityIcons name="text-shadow" size={50} color="#3b82f6" />,
       name: 'Manual',
       methods: () => {
-        trueSheetRef?.current?.snapToIndex(1)
+        router.push('/add-meds')
         console.log("Manual")
       }
     },
@@ -79,35 +77,17 @@ const camera = () => {
                 .map(([time, value]) => `${time}: ${value.number_of_tablets} tablet(s)`);
               setTimesWithPills(times);
             }
-
-            // setPatientname(jsonData.patientname);
-            // setMedicine(jsonData.medicine);
-            // setDose(jsonData.dose);
-            // setForm(jsonData.form);
-            // setManufacturer(jsonData.manufacturer);
-            // setQuantity(jsonData.quantity);
-            // setTaken(jsonData.taken);
-            // setDangerousOrControlledSubstance(jsonData.dangerousorcontrolledsubstance);
-            // setFrequency(jsonData.frequency);
-            // setSpecialInstructions(jsonData.special_instructions);
-
           }
 
 
         } catch (error) {
           console.error("Error:", error);
         } finally {
-          setLoading(false); // Hide loading after process completes
+          setLoading(false); 
         }
       }
     }
   ]
-
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === -1) {
-      setIsOpen(true);
-    }
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
@@ -121,7 +101,7 @@ const camera = () => {
           <View className='flex-row justify-between w-full mt-10'>
             {
               methodsToCreatePrescription.map((method, index) => (
-                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground'  onPress={method.methods}>
+                <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground' onPress={method.methods}>
                   {method.logo}
                   <Text className='text-foreground'>{method.name}</Text>
                 </TouchableOpacity>
@@ -129,48 +109,6 @@ const camera = () => {
             }
           </View>
         </View>
-        <TrueSheet ref={trueSheetRef} snapPoint={['10%', '100%']} handleSheetChanges={handleSheetChanges}>
-          <View>
-            <Text>Name of Patient Prescribed to</Text>
-            <TextInput className='text-foreground text-xl' value={jsonData.patientname}/>
-            <Text className='text-foreground text-xl'>Medicine: {jsonData.medicine}</Text>
-            <Text className='text-foreground text-xl'>Dose: {jsonData.dose}</Text>
-            <Text className='text-foreground text-xl'>Form: {jsonData.form}</Text>
-            <Text className='text-foreground text-xl'>Manufacturer: {jsonData.manufacturer}</Text>
-            <Text className='text-foreground text-xl'>Quantity: {jsonData.quantity}</Text>
-            <Text className='text-foreground text-xl'>Taken: {jsonData.taken ? "Yes" : "No"}</Text>
-            {/* <Text className='text-foreground text-xl'>Dangerous or Controlled Substance: {jsonData.dangerousOrControlledSubstance}</Text> */}
-            {/* <Text className='text-foreground'>Frequency: {frequency}</Text> */}
-            <Text className='text-foreground text-xl'>Special Instructions: {jsonData.special_instructions}</Text>
-            {timesWithPills.length > 0 ? (
-              timesWithPills.map((time, index) => (
-                <Text key={index} className='text-foreground text-xl'>
-                  Schedule: {time}
-                </Text>
-              ))
-            ) : (
-              <Text className='text-foreground'>No pills to take.</Text>
-            )}
-
-          </View>
-        </TrueSheet>
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-        <Dialog open={isOpen} >
-          <DialogContent className='sm:max-w-[425px]'>
-            <DialogHeader>
-              <DialogTitle>Save Medicine!</DialogTitle>
-              <DialogDescription>
-                Cancel medication Addtion, this action cannot be undone
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className='flex-row justify-end'>
-              <Button variant="outline"><Text className='text-foreground' onPress={() => { setIsOpen(false); console.log("closing") }}>Cancel</Text></Button>
-              <Button variant="destructive" onPress={() => { setIsOpen(false); trueSheetRef?.current?.snapToIndex(1) }}>
-                <Text className='text-white' >Proceed!</Text>
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </KeyboardAvoidingView >
     </SafeAreaView >
   );

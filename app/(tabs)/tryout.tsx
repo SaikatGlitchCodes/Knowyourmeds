@@ -1,25 +1,60 @@
-import BottomSheet from '@gorhom/bottom-sheet';
-import React, { useRef, useState } from 'react';
-import { Button, StyleSheet, View, Text } from 'react-native';
-import TrueSheet from '~/components/custom/TrueSheet';
+import {Calendar} from 'react-native-calendars';
+import {useState} from 'react';
 
-const Tryout = () => {
-  const sheetRef = useRef<BottomSheet>(null);
+const CalendarRange = () => {
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [markedDates, setMarkedDates] = useState({});
 
-  const openSheetWithItem = (item: string) => {
-    sheetRef.current?.snapToIndex(0); // Open the sheet
+  const handleDayPress = (day:any) => {
+    if (!startDate || (startDate && endDate)) {
+      // First click or reset
+      setStartDate(day.dateString);
+      setEndDate(null);
+      setMarkedDates({
+        [day.dateString]: {
+          startingDay: true,
+          color: '#50cebb'
+        }
+      });
+    } else {
+      // Second click
+      if (day.dateString < startDate) {
+        // If selected end date is before start date, swap them
+        setEndDate(startDate);
+        setStartDate(day.dateString);
+      } else {
+        setEndDate(day.dateString);
+      }
+
+      let range: { [key: string]: { color: string; startingDay: boolean; endingDay: boolean } } = {};
+      // Generate dates between start and end
+      let currentDate = new Date(startDate);
+      const endDateObj = new Date(day.dateString);
+
+      while (currentDate <= endDateObj) {
+        const dateString = currentDate.toISOString().split('T')[0];
+        
+        range[dateString] = {
+          color: '#50cebb',
+          startingDay: dateString === startDate,
+          endingDay: dateString === day.dateString
+        };
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      setMarkedDates(range);
+    }
   };
 
   return (
-    <View className="items-center justify-center flex-1">
-      <Button title="Open Sheet with Item 1" onPress={() => openSheetWithItem('Item 1')} />
-      <TrueSheet ref={sheetRef} >
-        <Text>Hello </Text>
-      </TrueSheet>
-    </View>
+    <Calendar
+      markingType={'period'}
+      onDayPress={handleDayPress}
+      markedDates={markedDates}
+    />
   );
 };
 
-const styles = StyleSheet.create({});
-
-export default Tryout;
+export default CalendarRange;

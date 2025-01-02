@@ -185,12 +185,12 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({ selectedDate, s
                         item.isToday && styles.todayItem,
                         isSelected && styles.selectedItem,
                     ]}
-                    className={`items-center py-4 mx-1 ${textColor} border-[1.5px] rounded-full border-gray-500 px-4`}
+                    className={`items-center py-7 mx-1 ${textColor} border-[0.5px] rounded-full border-gray-500 px-4`}
                     onPress={handlePress}
                 >
                     <Text style={[styles.dayText, item.isToday && styles.todayText]}>{item.day}</Text>
                     <Text className={`text-2xl ${item.isToday && 'text-white'} text-foreground`}>{item.date.split('-')[2]}</Text>
-                    <Image source={require('../../assets/images/check.png')} className='h-7 w-7' />
+                    {/* <Image source={require('../../assets/images/check.png')} className='h-7 w-7' /> */}
                 </TouchableOpacity>
             );
         },
@@ -198,7 +198,7 @@ const HorizontalCalendar: React.FC<HorizontalCalendarProps> = ({ selectedDate, s
     );
 
     return (
-        <View className="my-3 ">
+        <View className="mx-4 my-3">
             <View className="flex-row justify-between mb-3">
                 <Text className="text-xl text-foreground">{currentMonth}</Text>
                 <MaterialCommunityIcons onPress={handleResetToToday} name="backup-restore" size={24} color={textColor} />
