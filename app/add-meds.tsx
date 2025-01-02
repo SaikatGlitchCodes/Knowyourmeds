@@ -21,7 +21,7 @@ interface MedicineInfo {
     dangerous_or_controlled_substance: string;
     treatment_start_date: string;
     treatment_end_date: string;
-    prescription_refills: string;
+    prescription_refills: number;
     side_effects: string;
     frequency: Array<{ time: string; number_of_tablets: number }>;
     special_instructions: string;
@@ -40,13 +40,13 @@ const AddMeds = () => {
         dangerous_or_controlled_substance: '',
         treatment_start_date: '01/01/2025',
         treatment_end_date: '01/25/2025',
-        prescription_refills: '',
+        prescription_refills: 0,
         side_effects: '',
         frequency: [],
         special_instructions: '',
     });
     console.log('Medicine info', medicineInfo);
-    const [stepIndex, setStepIndex] = useState(0);
+    const [stepIndex, setStepIndex] = useState(2);
     const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
 
     const addMedicine = () => {

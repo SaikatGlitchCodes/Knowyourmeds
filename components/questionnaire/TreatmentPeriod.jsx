@@ -1,5 +1,5 @@
 import { Calendar } from 'react-native-calendars';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NAV_THEME } from '~/lib/constants';
 import {useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -9,28 +9,28 @@ import moment from 'moment';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
-  const [month, day, year] = dateString.split('/');
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  const [month, day, year] = dateString?.split('/').map(Number);
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 };
 
 const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
-  const defaultStart = formatDate(medicineInfo.treatment_start_date);
-  const defaultEnd = formatDate(medicineInfo.treatment_end_date);
-  const [startDate, setStartDate] = useState(defaultStart);
-  const [endDate, setEndDate] = useState(defaultEnd);
+
+  const [startDate, setStartDate] = useState(formatDate(medicineInfo.treatment_start_date) || null);
+  const [endDate, setEndDate] = useState(formatDate(medicineInfo.treatment_end_date) || null);
+  
   const [markedDates, setMarkedDates] = useState(() => {
     // Initialize with default date range
     let range = {};
-    let currentDate = new Date(defaultStart);
-    const endDateObj = new Date(defaultEnd);
+    let currentDate = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
     while (currentDate <= endDateObj) {
       const dateString = currentDate.toISOString().split('T')[0];
       range[dateString] = {
         color: '#3b82f6',
         textColor: 'white',
-        startingDay: dateString === defaultStart,
-        endingDay: dateString === defaultEnd
+        startingDay: dateString === startDate,
+        endingDay: dateString === endDate,
       };
       currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -40,7 +40,6 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
   const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
   const [refills, setRefills] = useState(0);
 
-  
   
   const handleDayPress = (day) => {
     if (!startDate || (startDate && endDate)) {
@@ -85,13 +84,17 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
     }
   };
 
+  useEffect(()=>{
+    setMedicineInfo(prev=>({...prev, treatment_start_date: startDate, treatment_end_date: endDate}))
+  }, [startDate, endDate])
+  
   const changeRefillValue = (type) => {
     if (type === 'plus') {
-      setRefills(prev => prev + 1);
+      setMedicineInfo(prev => ({...prev, prescription_refills: prev.prescription_refills+1}));
     }
     else if (type === 'minus') {
       if (refills > 0) {
-        setRefills(prev => prev - 1);
+        setMedicineInfo(prev => ({...prev, prescription_refills: prev.prescription_refills-1}));
       }
     }
 
@@ -115,15 +118,23 @@ const TreatmentPeriodRefills = ({medicineInfo, setMedicineInfo}) => {
           textDisabledColor: '#dd99ee'
         }}
       />
-      <Text className='text-2xl text-foreground' style={{ paddingVertical: 10 }}>Special Instructions (optional) </Text>
-      <Textarea multiline numberOfLines={3} placeholder='Eg. Take with warm water' />
+      <Text className='text-2xl text-foreground' style={{ paddingVertical: 10 }}>
+        Special Instructions (optional) 
+      </Text>
+      
+      <Textarea 
+        value={medicineInfo.special_instructions} 
+        onChangeText={value=> setMedicineInfo(prev=>({...prev, special_instructions: value}))} multiline 
+        numberOfLines={3} 
+        placeholder='Eg. Take with warm water' />
+        
       <Text className='text-2xl text-foreground' style={{ paddingVertical: 5 }}>Refills</Text>
       <View className='flex-row items-center m-auto mt-4 '>
         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
           () => changeRefillValue('minus')}>
           <AntDesign name="minus" size={20} color="#3b82f6" />
         </TouchableOpacity>
-        <Text className='mx-4 text-3xl text-foreground'>{refills}</Text>
+        <Text className='mx-4 text-3xl text-foreground'>{medicineInfo.prescription_refills}</Text>
         <TouchableOpacity className='p-3 rounded-lg bg-primary-foreground' onPress={
           () => changeRefillValue('plus')}>
           <AntDesign name="plus" size={20} color="#3b82f6" />
