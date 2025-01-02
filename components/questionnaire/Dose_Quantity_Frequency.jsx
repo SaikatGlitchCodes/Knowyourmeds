@@ -7,7 +7,7 @@ import { NAV_THEME } from '~/lib/constants';
 
 const DoseQuantityFrequency = ({ medicineInfo, setMedicineInfo }) => {
     const colorScheme = useColorScheme();
-    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"].text;
+    const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
     const [selectedFrequency, setSelectedFrequency] = useState(
         medicineInfo.frequency.length > 0
             ? medicineInfo.frequency
