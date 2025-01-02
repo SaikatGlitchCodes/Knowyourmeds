@@ -11,7 +11,7 @@ const MedicineFormItem = ({ item, isActive, onSelect }) => (
         className={`flex-col items-center p-5 justify-between h-28 w-28 rounded-xl ${isActive ? 'bg-themeColor' : 'bg-primary-foreground'}`}
     >
         {iconRef(item.title, 30, isActive ? 'white' : '#3b82f6')}
-        <Text className={`mt-6 text-md ${isActive ? 'text-foreground' : 'text-themeColor'}`}>{item.title}</Text>
+        <Text className={`mt-6 text-md ${isActive ? 'text-foreground' : 'text-foreground'}`}>{item.title}</Text>
     </TouchableOpacity>
 );
 
