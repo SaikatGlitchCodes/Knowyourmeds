@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { firebaseConfig } from '../../util/firebaseConfig';
+import { Dialog, DialogFooter, DialogContent, DialogHeader, DialogDescription, DialogTitle } from '~/components/ui/dialog';
+import TrueSheet from '~/components/custom/TrueSheet';
+import { firebaseConfig } from '../../util/firebaseConfig'
+import BottomSheet from '@gorhom/bottom-sheet';
+import { Button } from '~/components/ui/button';
 import { handlePhotoAndAnalysis } from '~/util/handlingCameraUpload';
-import { useRouter } from 'expo-router';
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -13,7 +16,21 @@ if (!initializeApp.apps?.length) {
 }
 
 const camera = () => {
-  const router = useRouter();
+  const trueSheetRef = useRef<BottomSheet>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [jsonData, setJsonData] = useState<any>({});
+  const [patientname, setPatientname] = useState("");
+  const [medicine, setMedicine] = useState("");
+  const [dose, setDose] = useState("");
+  const [form, setForm] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [taken, setTaken] = useState(false);
+  const [dangerousOrControlledSubstance, setDangerousOrControlledSubstance] = useState("");
+  const [frequency, setFrequency] = useState({});
+  const [specialInstructions, setSpecialInstructions] = useState("");
+  const [timesWithPills, setTimesWithPills] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -43,11 +60,31 @@ const camera = () => {
     {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
-      methods: () => {
-       
-        router.push('/camera-splash')
-        handlePhotoAndAnalysis()
-        console.log("Prescription App")
+      methods: async () => {
+        console.log("Camera button pressed");
+        setLoading(true); // Show loading only after camera is pressed
+        try {
+          const result = await handlePhotoAndAnalysis();
+          
+          if (result.success) {
+            setJsonData(result.datatoPrint); // Update state with the JSON object
+            
+            trueSheetRef?.current?.snapToIndex(1); // Open TrueSheet
+            const frequency = result.datatoPrint.frequency;
+            if (frequency) {
+              const times = Object.entries(frequency)
+                .filter(([_, value]) => value.number_of_tablets > 0)
+                .map(([time, value]) => `${time}: ${value.number_of_tablets} tablet(s)`);
+              setTimesWithPills(times);
+            }
+          }
+
+
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          setLoading(false); 
+        }
       }
     }
   ]

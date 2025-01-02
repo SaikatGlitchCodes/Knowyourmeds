@@ -15,5 +15,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "components/custom/SwipeableTasks.jsx", "context/account-context.js"  ]
+, "components/custom/SwipeableTasks.jsx", "context/account-context.js", "util/handlingCameraUpload.js"  ]
 }
