@@ -1,11 +1,13 @@
 export const processFrequencies = (medicines) => {
     // Flatten medicines with each frequency as a separate entry
     const flattenedMedicines = medicines.flatMap(medicine =>
-        medicine.frequency.map(({ time, number_of_tablets }) => ({
-            ...medicine,
-            time,
-            number_of_tablets,
-        }))
+        medicine.frequency
+            .filter(freq => freq.number_of_tablets > 0) // Filter valid tablets
+            .map(({ time, number_of_tablets }) => ({
+                ...medicine,
+                time,
+                number_of_tablets,
+            }))
     );
 
     // Sort the flattened medicines by time

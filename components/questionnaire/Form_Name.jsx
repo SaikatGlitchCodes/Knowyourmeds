@@ -27,12 +27,12 @@ const FormName = ({ values, errors, touched, handleChange, setFieldValue }) => {
                         error={touched.medicine && errors.medicine}
                     />
                     {touched.medicine && errors.medicine && (
-                        <Text className="text-red-500">{errors.medicine}</Text>
+                        <Text className="mt-2 text-red-500">{errors.medicine}</Text>
                     )}
                 </View>
                 <View className="mt-3">
                     <Text className="text-2xl text-foreground">Choose Medicine Form</Text>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', height: '300', alignSelf: 'baseline', justifyContent: 'center', gap: 15 }} >
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', alignSelf: 'baseline', justifyContent: 'center', gap: 15 }} >
                         {
                             medicineForm.map((item, index) => (
                                 <MedicineFormItem
@@ -45,7 +45,7 @@ const FormName = ({ values, errors, touched, handleChange, setFieldValue }) => {
                         }
                     </View>
                     {touched.form && errors.form && (
-                        <Text className="text-red-500">{errors.form}</Text>
+                        <Text className="mt-2 text-red-500">{errors.form}</Text>
                     )}
                 </View>
             </View>

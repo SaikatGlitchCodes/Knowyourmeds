@@ -1,10 +1,8 @@
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import BottomSheet from '@gorhom/bottom-sheet';
-import TrueSheet from '~/components/custom/TrueSheet';
+
 export const handlePhotoAndAnalysis = async () => {
    
   try {
@@ -64,7 +62,6 @@ export const handlePhotoAndAnalysis = async () => {
       analysisResult: analysisResponse.data.response,
       finalData: console.log(cleanInput),
       datatoPrint: data,
-      loadingComp:  <ActivityIndicator size="large" />
     };
 
   } catch (error) {
