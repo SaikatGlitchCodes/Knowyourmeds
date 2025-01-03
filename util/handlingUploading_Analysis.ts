@@ -116,21 +116,33 @@ export const handlePhoto = async (): Promise<AnalysisResponse> => {
 export const handleTextAndNFC = async (data: any): Promise<AnalysisResponse> => {
   const { show, setStatus, setProgress } = useUploadStore.getState();
 
+  const extractObject = (inputString: string) => {
+    const objectStartIndex = inputString.indexOf('{');
+    const objectEndIndex = inputString.lastIndexOf('}');
+    if (objectStartIndex === -1 || objectEndIndex === -1) {
+      throw new Error('No valid JSON object found in the string.');
+    }
+    const jsonString = inputString.slice(objectStartIndex, objectEndIndex + 1);
+    return JSON.parse(jsonString);
+  };
+
   try {
     show();
     setStatus(UPLOAD_STATUS.ANALYSING);
     setProgress(50);
 
     const response = await axios.post('https://medicineschedulerai.onrender.com/generate/textinput', data);
+    
+    // Clean the input and extract the object
     const cleanInput = response.data.response.replace(/```json|```/g, '').trim();
-    const parsedData = JSON.parse(cleanInput);
+    const parsedData = extractObject(cleanInput);
 
     setStatus(UPLOAD_STATUS.DONE);
     setProgress(100);
 
     return {
       success: true,
-      analysisResult: response.data.response,
+      analysisResult: JSON.stringify(parsedData),
       datatoPrint: parsedData,
     };
 
