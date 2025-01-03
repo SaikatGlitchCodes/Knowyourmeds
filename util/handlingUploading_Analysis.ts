@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { useUploadStore, UPLOAD_STATUS } from '~/storage/uploadStore';
 import { logger } from './logger';
+import { useMedicineStore } from '~/storage/medicineStore';
 
 interface AnalysisResponse {
   success: boolean;
@@ -139,6 +140,7 @@ export const handleTextAndNFC = async (data: any): Promise<AnalysisResponse> => 
 
     setStatus(UPLOAD_STATUS.DONE);
     setProgress(100);
+    useMedicineStore.getState().addMedicine(parsedData);
 
     return {
       success: true,

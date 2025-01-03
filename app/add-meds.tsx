@@ -36,7 +36,7 @@ const AddMeds = () => {
     const themeColor = NAV_THEME[colorScheme === "light" ? "light" : "dark"];
 
     const initialValues: MedicineInfo = {
-        medicine: '',
+        medicine: 'Hello',
         uses_of_the_medicine: '',
         dose_in_mg: '',
         form: '',

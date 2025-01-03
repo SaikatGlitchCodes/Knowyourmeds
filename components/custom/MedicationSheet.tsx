@@ -55,16 +55,19 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
                     <TouchableOpacity onPress={() => setViewTime(!viewTime)} className='flex items-center justify-center rounded-lg h-11 w-11 bg-themeColor'>
                         <AntDesign name="plus" size={30} color="white" />
                     </TouchableOpacity>
-
+            <ScrollView horizontal
+                snapToOffsets={[0, 230, 450]}
+                showsHorizontalScrollIndicator={false}>
                     {
                         medicine.frequency?.filter((freq: Frequency) => freq.number_of_tablets > 0)?.map((time: Frequency, index: number) => {
                             return (
-                                <TouchableOpacity key={index} className='flex items-center px-5 py-2 rounded-lg h-11 bg-primary-foreground'>
+                                <TouchableOpacity key={index} className='flex items-center px-5 py-2 rounded-lg h-11 bg-primary-foreground mx-1'>
                                     <Text className='text-xl font-light text-foreground'>{time.time}</Text>
                                 </TouchableOpacity>
                             )
                         })
                     }
+                </ScrollView>
                 </View>
             </View>
             <View className='p-5 my-4 rounded-xl bg-primary-foreground'>
