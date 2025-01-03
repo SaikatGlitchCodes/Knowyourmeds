@@ -3,7 +3,7 @@ import * as Crypto from 'expo-crypto';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { useUploadStore, UPLOAD_STATUS } from '~/storage/uploadStore';
-import { logger } from './logger';
+
 import { useMedicineStore } from '~/storage/medicineStore';
 
 interface AnalysisResponse {
@@ -16,7 +16,7 @@ interface AnalysisResponse {
 }
 
 const uploadToFirebase = async (uri: string, setProgress: (progress: number) => void) => {
-  logger.start('Starting Firebase upload');
+  console.log('Starting Firebase upload');
   const startTime = Date.now();
   const newUuid = Crypto.randomUUID();
   const response = await fetch(uri);
@@ -32,15 +32,15 @@ const uploadToFirebase = async (uri: string, setProgress: (progress: number) => 
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setProgress(Math.round(progress));
-        logger.progress(`Upload progress: ${Math.round(progress)}%`);
+        console.log(`Upload progress: ${Math.round(progress)}%`);
       },
       (error) => {
-        logger.error('Upload failed:', error);
+        console.error('Upload failed:', error);
         reject(error);
       },
       () => {
         const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-        logger.success(`Upload completed in ${duration}s`);
+        console.log(`Upload completed in ${duration}s`);
         resolve(newUuid);
       }
     );
@@ -58,10 +58,10 @@ const analyzeImage = async (base64Image: string) => {
 export const handlePhoto = async (): Promise<AnalysisResponse> => {
   const { show, setStatus, setProgress, hide } = useUploadStore.getState();
   const startTime = Date.now();
-  logger.start('Starting photo capture and analysis');
+  console.log('Starting photo capture and analysis');
 
   try {
-    logger.info('Launching camera');
+    console.info('Launching camera');
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -70,19 +70,19 @@ export const handlePhoto = async (): Promise<AnalysisResponse> => {
     });
 
     if (result.canceled || !result.assets.length) {
-      logger.warn('Photo capture cancelled by user');
+      console.warn('Photo capture cancelled by user');
       throw new Error('Photo capture cancelled');
     }
 
     const { uri } = result.assets[0];
-    logger.info(`Photo captured: ${uri.substring(uri.length - 20)}`);
+    console.info(`Photo captured: ${uri.substring(uri.length - 20)}`);
     
     show();
     setStatus(UPLOAD_STATUS.UPLOADING);
 
     const uploadId = await uploadToFirebase(uri, setProgress);
 
-    logger.info('Starting image analysis');
+    console.info('Starting image analysis');
     setStatus(UPLOAD_STATUS.ANALYSING);
     setProgress(50);
 
@@ -90,7 +90,7 @@ export const handlePhoto = async (): Promise<AnalysisResponse> => {
     const analysisData = await analyzeImage(base64Image);
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    logger.success(`Process completed in ${duration}s`);
+    console.log(`Process completed in ${duration}s`);
 
     setStatus(UPLOAD_STATUS.DONE);
     setProgress(100);
@@ -104,7 +104,7 @@ export const handlePhoto = async (): Promise<AnalysisResponse> => {
     };
 
   } catch (error) {
-    logger.error('Process failed:', error);
+    console.log('Process failed:', error);
     setStatus(UPLOAD_STATUS.ERROR);
     console.error('Error in photo process:', error);
     return {

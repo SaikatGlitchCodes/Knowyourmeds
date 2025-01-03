@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
@@ -6,6 +6,9 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { firebaseConfig } from '../../util/firebaseConfig';
 import { handlePhoto } from '~/util/handlingUploading_Analysis';
 import { useRouter } from 'expo-router';
+import { Overlay } from 'react-native-elements';
+import LottieView from 'lottie-react-native';
+import NFCReader from '~/components/custom/NFCReader';
 
 // Initialize Firebase
 if (!initializeApp.apps?.length) {
@@ -14,6 +17,7 @@ if (!initializeApp.apps?.length) {
 
 const camera = () => {
   const router = useRouter();
+  const [nfcVisible, setNfcVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -29,6 +33,7 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="nfc" size={50} color="#3b82f6" />,
       name: 'NFC',
       methods: () => {
+        setNfcVisible(true)
         console.log("Scan NFC")
       }
     },
@@ -43,8 +48,12 @@ const camera = () => {
     {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
-      methods: () => {
-        handlePhoto()
+      methods: async () => {
+        const data = await handlePhoto()
+        router.push({
+          pathname: '/add-meds',
+          params: { prefillData: data.analysisResult }
+        })
         console.log("Prescription App")
       }
     }
@@ -65,10 +74,20 @@ const camera = () => {
                 <TouchableOpacity key={index} className='flex items-center justify-center rounded-lg h-28 w-28 bg-primary-foreground' onPress={method.methods}>
                   {method.logo}
                   <Text className='text-foreground'>{method.name}</Text>
+                  
                 </TouchableOpacity>
+                
               ))
             }
+
           </View>
+
+          <Overlay isVisible={nfcVisible} onBackdropPress={() => setNfcVisible(false)}>
+          {/* <LottieView source={require('~/assets/nfcLottie.json')} autoPlay loop  style={{ width: 200, height: 200 }}
+        resizeMode="cover"/> */}
+
+        <NFCReader />
+          </Overlay>
         </View>
       </KeyboardAvoidingView >
     </SafeAreaView >
