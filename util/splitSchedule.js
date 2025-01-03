@@ -1,39 +1,59 @@
-import calculateProgressPercentage from "./calculateProgress";
+export const processFrequencies = (medicines) => {
+    // Flatten medicines with each frequency as a separate entry
+    const flattenedMedicines = medicines.flatMap(medicine =>
+        medicine.frequency.map(({ time, number_of_tablets }) => ({
+            ...medicine,
+            time,
+            number_of_tablets,
+        }))
+    );
 
-export const splitSchedule = (medicines) => {
-    const result = [];
-
-    medicines.forEach((medicine) => {
-        medicine.schedule.forEach((timeRange) => {
-            // Create a new object for each schedule
-            const scheduleObject = {
-                name: medicine.name,
-                dose: medicine.dose,
-                description: medicine.description,
-                timeRange: timeRange,
-                type: medicine.type,
-                duration: medicine.duration,
-                frequency: medicine.frequency,
-                dosePerDay: medicine.dosePerDay,
-                startDate: medicine.startDate,
-                sideEffect: medicine.sideEffect,
-                progressPercentage: calculateProgressPercentage(medicine.startDate, medicine.duration),
-                ...medicine,
-            };
-
-            result.push(scheduleObject);
-        });
+    // Sort the flattened medicines by time
+    const sortedMedicines = flattenedMedicines.sort((a, b) => {
+        // Convert time to comparable values
+        const timeA = new Date(`1970-01-01T${a.time}:00`);
+        const timeB = new Date(`1970-01-01T${b.time}:00`);
+        return timeA - timeB;
     });
 
-    // Sort the result array by timeRange (considering timeRange is a string like "07:00")
-    result.sort((a, b) => {
-        const [hourA, minuteA] = a.timeRange.split(":").map(Number);
-        const [hourB, minuteB] = b.timeRange.split(":").map(Number);
-        if (hourA === hourB) {
-            return minuteA - minuteB;
-        }
-        return hourA - hourB;
-    });
+    return sortedMedicines;
+};
 
-    return result;
-}
+export const frequencyArray = [
+    { time: "07:00", number_of_tablets: 0 },
+    { time: "08:00", number_of_tablets: 0 },
+    { time: "09:00", number_of_tablets: 0 },
+    { time: "10:00", number_of_tablets: 0 },
+    { time: "11:00", number_of_tablets: 0 },
+    { time: "12:00", number_of_tablets: 0 },
+    { time: "13:00", number_of_tablets: 0 },
+    { time: "14:00", number_of_tablets: 0 },
+    { time: "15:00", number_of_tablets: 0 },
+    { time: "16:00", number_of_tablets: 0 },
+    { time: "17:00", number_of_tablets: 0 },
+    { time: "18:00", number_of_tablets: 0 },
+    { time: "19:00", number_of_tablets: 0 },
+    { time: "20:00", number_of_tablets: 0 },
+    { time: "21:00", number_of_tablets: 0 },
+    { time: "22:00", number_of_tablets: 0 },
+    { time: "23:00", number_of_tablets: 0 },
+    { time: "00:00", number_of_tablets: 0 },
+    { time: "01:00", number_of_tablets: 0 },
+    { time: "02:00", number_of_tablets: 0 },
+    { time: "03:00", number_of_tablets: 0 },
+    { time: "04:00", number_of_tablets: 0 },
+    { time: "05:00", number_of_tablets: 0 },
+    { time: "06:00", number_of_tablets: 0 },
+];
+
+export const medicineForm = [
+    { title: 'Injection' },
+    { title: 'Capsule' },
+    { title: 'Tablet' },
+    { title: 'Syrup' },
+    { title: 'Solution' },
+    { title: 'Liquid', },
+    { title: 'Powder', },
+    { title: 'Lotion', },
+    { title: 'Inhaler', },
+]

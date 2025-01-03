@@ -14,11 +14,10 @@ export default function TabLayout() {
       initialRouteName='index'
       screenOptions={{
         tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
           default: {},
         }),
+        tabBarActiveTintColor: '#007AFF', // Active tab color
+        tabBarInactiveTintColor: '#8E8E93', // Inactive tab color
       }}>
         
       <Tabs.Screen
@@ -26,15 +25,41 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: 'Home',
-          tabBarIcon: ({ color }) => <FontAwesome name="home" size={29} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome 
+              name={focused ? "home" : "home"} 
+              size={focused ? 32 : 29} 
+              color={color} 
+            />
+          ),
         }}
       />
+      <Tabs.Screen
+        name="active"
+        options={{
+          headerShown: false,
+          title: 'Active',
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome 
+              name={focused ? "medkit" : "medkit"} 
+              size={focused ? 32 : 29} 
+              color={color} 
+            />
+          ),
+        }}
+        />
       <Tabs.Screen
         name="camera"
         options={{
           headerShown: false,
           title: 'Camera',
-          tabBarIcon: ({ color }) => <FontAwesome name="plus" size={29} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome 
+              name={"plus"} 
+              size={focused ? 32 : 29} 
+              color={color} 
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -42,7 +67,13 @@ export default function TabLayout() {
         options={{
           headerShown: true,
           title: 'Tryout',
-          tabBarIcon: ({ color }) => <FontAwesome name="trophy" size={29} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome 
+              name={focused ? "trophy" : "trophy"} 
+              size={focused ? 32 : 29} 
+              color={color} 
+            />
+          ),
         }}
       />  
       <Tabs.Screen
@@ -50,7 +81,13 @@ export default function TabLayout() {
         options={{
           headerRight: () => <ThemeToggle />,
           title: 'Profile',
-          tabBarIcon: ({ color }) => <FontAwesome name="user" size={29} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome 
+              name={focused ? "user" : "user-o"} 
+              size={focused ? 32 : 29} 
+              color={color} 
+            />
+          ),
         }}
       />
     </Tabs>

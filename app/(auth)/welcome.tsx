@@ -9,7 +9,7 @@ const WelcomeScreens = [
     {
         title: 'Welcome to',
         subtitle: 'Your #1 Free Medicine Scheduling App',
-        image: require('~/assets/images/welcome1.png'),
+        image: null,
     },
     {
         title: 'Discover',

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import HorizontalCalendar from '~/components/custom/HorizontalCalendar';
@@ -8,26 +8,32 @@ import { router } from 'expo-router';
 import TrueSheet from '~/components/custom/TrueSheet';
 import BottomSheet from '@gorhom/bottom-sheet';
 import MedicationSheet from '~/components/custom/MedicationSheet';
-import { medicines } from '~/util/medicineList';
-import { splitSchedule } from '~/util/splitSchedule';
+import { useMedicineStore } from '~/storage/medicineStore';
+import { processFrequencies } from '~/util/splitSchedule';
+import calculateCompletion from '~/util/calculateProgress';
 
 
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-    const [tasks, setTasks] = useState(medicines);
     const [selectedTask, setSelectedTask] = useState({});
     const sheetRef = useRef<BottomSheet>(null);
-
+    
+    const medicines = useMedicineStore((state) => state.medicines);
+    console.log('[MED] :',medicines.length);
+    
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
 
     const handlePressItem = (item: any) => {
-        setSelectedTask(item);
+        const percentageCal = calculateCompletion(item.treatment_start_date, item.treatment_end_date);
+        setSelectedTask({...item, percentageCal});
         sheetRef.current?.snapToIndex(0);
-        console.log('Pressed item: ' + item.name);
     };
-
+    
+    const handleClose =()=>{
+        sheetRef.current?.close();
+    }
     return (
-        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 50 : 0 }}>
+        <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? 40 : 0}}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{ flex: 1 }}
@@ -40,21 +46,19 @@ const Index = () => {
                                 <Text>ZN</Text>
                             </AvatarFallback>
                         </Avatar>
-                        <Text className='text-2xl ms-2 text-foreground' onPress={() => {
-                            router.replace("/(auth)/welcome")
-                        }}>
+                        <Text className='text-2xl ms-2 text-foreground'>
                             Hi,
                             <Text className='font-semibold '>Saikat Samanta</Text> 👋
                         </Text>
                     </View>
-                    <Text className='px-4 mt-2 text-3xl font-light text-foreground'>
+                    <Text className='mt-2 text-3xl font-light text-center text-foreground'>
                         "Take your medicine today for a healthier tomorrow"
                     </Text>
                     <HorizontalCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                 </View>
-                <SimpleSwipable tasks={splitSchedule(tasks)} handlePressItem={handlePressItem} />
-                <TrueSheet ref={sheetRef} snapPoint={['52%', '90%']}>
-                    <MedicationSheet medicine={selectedTask} />
+                <SimpleSwipable tasks={processFrequencies(medicines)} handlePressItem={handlePressItem} />
+                <TrueSheet ref={sheetRef} snapPoint={['52%', '100%']}>
+                    <MedicationSheet medicine={selectedTask} handleClose={handleClose}/>
                 </TrueSheet>
             </KeyboardAvoidingView>
         </SafeAreaView>
