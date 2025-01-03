@@ -17,6 +17,11 @@ interface MedicationSheetProps {
     }
 }
 
+interface Frequency {
+    time: string;
+    number_of_tablets: number;
+}
+
 const MedicationSheet = ({ medicine, handleClose }: any) => {
     const router = useRouter();
     const [viewTime, setViewTime] = React.useState(false);
@@ -33,7 +38,7 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
     };
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View>
             <View>
                 <View className='flex-row items-center justify-between'>
                     <Text className='mb-2 text-3xl font-semibold text-foreground'>
@@ -46,12 +51,13 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
 
             <View className='mt-3'>
                 <Text className='text-2xl text-foreground'>Schedule</Text>
-                <View className='flex-row items-center mt-2 gap-x-4'>
+                <View className='flex-row items-center w-full mt-2 gap-x-4'>
                     <TouchableOpacity onPress={() => setViewTime(!viewTime)} className='flex items-center justify-center rounded-lg h-11 w-11 bg-themeColor'>
                         <AntDesign name="plus" size={30} color="white" />
                     </TouchableOpacity>
+
                     {
-                        medicine.frequency?.map((time: any, index: number) => {
+                        medicine.frequency?.filter((freq: Frequency) => freq.number_of_tablets > 0)?.map((time: Frequency, index: number) => {
                             return (
                                 <TouchableOpacity key={index} className='flex items-center px-5 py-2 rounded-lg h-11 bg-primary-foreground'>
                                     <Text className='text-xl font-light text-foreground'>{time.time}</Text>
@@ -60,15 +66,6 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
                         })
                     }
                 </View>
-                <ScrollView horizontal className={`mt-4 pb-3 ${viewTime ? 'block' : 'hidden'}`}>
-                    {
-                        frequencyArray.map((frequency, index) => (
-                            <TouchableOpacity key={index} className='flex items-center px-5 py-2 rounded-lg h-11 bg-primary-foreground me-3'>
-                                <Text className='text-xl font-light text-foreground'>{frequency.time}</Text>
-                            </TouchableOpacity>
-                        ))
-                    }
-                </ScrollView>
             </View>
             <View className='p-5 my-4 rounded-xl bg-primary-foreground'>
                 <View className='flex-row items-center gap-x-4'>
@@ -96,7 +93,7 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
                 snapToOffsets={[0, 230, 450]}
                 showsHorizontalScrollIndicator={false}
             >
-                <TouchableOpacity className='p-3 border-[1px] rounded-2xl border-slate-200 mr-4 w-[230]'>
+                <TouchableOpacity className='p-3 border-[1px] h-72 rounded-2xl border-slate-200 mr-4 w-[230]'>
                     <Text className='text-xl text-foreground'>Progress</Text>
                     <Text className='text-muted-foreground'>Course started at {moment(medicine.startDate).format("DD MMM YYYY")}</Text>
                     <View className='m-auto my-3'>
@@ -139,7 +136,7 @@ const MedicationSheet = ({ medicine, handleClose }: any) => {
                     <Text className='text-xl font-light text-muted-foreground'>{medicine.special_instructions}</Text>
                 </View>
             }
-        </ScrollView>
+        </View>
     );
 }
 

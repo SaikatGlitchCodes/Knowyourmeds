@@ -35,7 +35,9 @@
     "@rn-primitives/toggle": "^1.1.0",
     "@rn-primitives/tooltip": "~1.1.0",
     "@rn-primitives/types": "~1.1.0",
+    "@testing-library/react-native": "^13.0.0",
     "axios": "^1.7.9",
+    "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "^52.0.7",
@@ -90,6 +92,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@react-native-community/cli": "latest",
+    "@types/jest": "^29.5.14",
     "@types/react": "~18.3.12",
     "babel-plugin-module-resolver": "^5.0.2",
     "metro-react-native-babel-preset": "^0.77.0",

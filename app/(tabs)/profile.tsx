@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Feather, Ionicons, Entypo, AntDesign } from '@expo/vector-icons';
@@ -8,7 +8,6 @@ import { useColorScheme } from 'react-native';
 import { NAV_THEME } from '~/lib/constants';
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,

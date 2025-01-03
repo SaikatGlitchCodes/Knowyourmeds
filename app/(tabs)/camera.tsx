@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { firebaseConfig } from '../../util/firebaseConfig';
-import { handlePhotoAndAnalysis } from '~/util/handlingCameraUpload';
+import { handlePhoto } from '~/util/handlingUploading_Analysis';
 import { useRouter } from 'expo-router';
 
 // Initialize Firebase
@@ -44,9 +44,7 @@ const camera = () => {
       logo: <MaterialCommunityIcons name="camera-plus-outline" size={50} color="#3b82f6" />,
       name: 'AI Camera',
       methods: () => {
-       
-        
-        handlePhotoAndAnalysis()
+        handlePhoto()
         console.log("Prescription App")
       }
     }

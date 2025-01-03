@@ -89,7 +89,7 @@ export default function RootLayout() {
               headerShown: false,
             }} />
           </Stack>
-          {/* <FloatLoader/> */}
+          <FloatLoader/>
         </View>
         <PortalHost />
       </ThemeProvider>

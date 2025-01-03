@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, Platform, KeyboardAvoidingView, ScrollView, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useMedicineStore } from '~/storage/medicineStore';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router';
 import { Progress } from '~/components/ui/progress';
@@ -12,6 +11,7 @@ import TreatmentPeriodRefills from '~/components/questionnaire/TreatmentPeriod';
 import { NAV_THEME } from '~/lib/constants';
 import { Formik } from 'formik';
 import { medicineValidationSchema } from '~/lib/validationSchema';
+import {handleTextAndNFC} from '~/util/handlingUploading_Analysis';
 
 interface MedicineInfo {
     medicine: string;
@@ -101,15 +101,14 @@ const AddMeds = () => {
         return !currentFields.some(field => errors[field]);
     };
 
-    console.log('Step Index', ((stepIndex+1)/addMedSteps.length)*100);
-
     return (
         <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? 40 : 0, padding: 20, flex: 1 }}>
             <Formik
                 initialValues={initialValues}
                 validationSchema={medicineValidationSchema}
                 onSubmit={(values) => {
-                    useMedicineStore.getState().addMedicine(values);
+                    console.log('[Values] :', values);
+                    handleTextAndNFC(values);
                     router.back();
                 }}
             >

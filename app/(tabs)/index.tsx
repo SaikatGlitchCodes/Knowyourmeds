@@ -16,10 +16,8 @@ import calculateCompletion from '~/util/calculateProgress';
 const Index = () => {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [selectedTask, setSelectedTask] = useState({});
-    const sheetRef = useRef<BottomSheet>(null);
-    
+    const sheetRef = useRef<BottomSheet>(null);  
     const medicines = useMedicineStore((state) => state.medicines);
-    console.log('[MED] :',medicines.length);
     
     const GITHUB_AVATAR_URI = 'https://avatars.githubusercontent.com/u/54322198';
 
